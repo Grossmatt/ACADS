@@ -1,0 +1,11 @@
+//Quickstart guide for software
+
+
+Upon loading of the operating system, the ethernet module ip address must
+be set up in the same range that way the user interface and carrier board can communicate. i.e. carrier board ip 10.0
+The command to compile the code and generate executable:
+
+gcc acads_threads.c -o [EXECUTABLE NAME] -pthread
+
+then to run executable:
+./[EXECUTABLE NAME]

@@ -1,0 +1,1 @@
+"./i2cFeedbackController.obj" "./main.obj" "./driverlib/cpu.obj" "./driverlib/gpio.obj" "./driverlib/i2c.obj" "./driverlib/interrupt.obj" "./driverlib/sysctl.obj" -llibc.a 

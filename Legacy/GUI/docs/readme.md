@@ -1,0 +1,1 @@
+Command for starting the app while testing: npm start

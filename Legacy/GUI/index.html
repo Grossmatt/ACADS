@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Advanced Control Actuation Drive System</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" href="Assets/styles.css"/>
+    <script src="src/pureknob.js"></script>
+    <script src='src/papaparse.js'></script>
+    <!--<script src="src/d3.js"></script>-->
+  </head>
+  <body>
+    <div class="title">
+      <h1>Advanced Control Actuation Drive System</h1>
+    </div> <!--TItle row in dashboard-->
+
+    <div class="container">
+      <div class="column-1">
+        <label for="degrees1">Motor 1 Degrees of Rotation:</label>
+        <input type="number" id="degrees1" name="degrees1"
+            min="-40" max="40" value="0">
+        <button class="button" id="sendPosition1">Update Motor 1 Position</button><!--this on click will send the nmotor position to the micro controller-->
+        <label for="degrees2">Motor 2 Degrees of Rotation:</label>
+        <input type="number" id="degrees2" name="degrees2"
+            min="-40" max="40" value="0">
+        <button class="button" id="sendPosition2">Update Motor 2 Position</button><!--this on click will send the nmotor position to the micro controller-->
+      </div>   
+      <div class="column-2">
+        <label align="center" for="motor-position-gauge1">Motor 1 Position (Degrees)</label>
+        <div align="center" id="motor-position-gauge1"></div>
+      </div>     
+      <div class="column-3">
+        <label align="center" for="motor-position-gauge2">Motor 2 Position (Degrees)</label>
+        <div align="center" id="motor-position-gauge2"></div>
+      </div>    
+      <div class="column-4">
+        <label for="fileSelect">Select Position Profile CSV:</label>
+        <input type="file" id="fileSelect" accept=".csv"/>
+        <button class="button" id="uploadData">Upload Position List</button><!--this on click will initiate a position profile upload-->
+        <button class="button" id="checkFunction">Check Functionality</button><!--this on click will initiate a functionality check-->
+        <button class="button" id="powerOff">Power Off</button><!--this on click will initiate a power off-->
+        <button class="button" id="powerOn">Power On</button><!--this on click will initiate a functionality check-->
+      </div>
+    </div> <!--First row in dashboard-->
+    <div class="container">   
+        <canvas align="center" id="feedbackVoltageChart" width="500" height="300"></canvas>
+    </div> <!--Second row in dashboard-->
+    <div class="container">   
+      <canvas align="center" id="feedbackPositionChart" width="500" height="300"></canvas>
+  </div> <!--Third row in dashboard-->
+
+  </body>
+
+  <script src="src/database.js"></script>
+  <script src="src/knobSetup.js"></script>
+  <script src="src/visualization.js"></script>
+  <script src="src/communicationControl.js"></script>
+</html>

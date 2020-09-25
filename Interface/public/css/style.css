@@ -1,0 +1,69 @@
+body {
+padding: 0;
+margin: 0px 50px;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-weight: 300;
+text-rendering: optimizelegibility;
+background-color: #000000;
+}
+
+p {
+font-size: 30px; 
+line-height: 30px;
+
+}
+
+div.motor {
+text-align: center; 
+width: 25%; 
+float: left;
+}
+
+div.motor > p {
+font-size: 20px;
+color: #518a77;
+
+}
+
+div.statusbox {
+padding-top: 25px;
+text-align: left; 
+width: 25%; 
+float: left;
+}
+
+div.switchbox {
+padding-top: 25px;
+text-align: right; 
+width: 25%; 
+float: left;
+}
+
+div.statusbox > .statuslabel {
+  
+font-size: 20px;
+color: #518a77; 
+line-height: 30px;
+
+  
+}
+
+div.statusbox > .status-off {
+  
+font-size: 20px;
+color: #75040f; 
+line-height: 30px;
+
+  
+}
+
+
+div.statusbox > .status-on {
+  
+font-size: 20px;
+color: #1bf782; 
+line-height: 30px;
+font-weight: 900;
+
+  
+}
