@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>jQuery Knob demo</title>
+        <title>ACADS UserInterface</title>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
         <script src="js/jquery.knob.min.js"></script>
@@ -18,7 +18,12 @@
         </script>
 
     </head>
-    <body>
+    <body class="dark">
+        <div class="top-menu">
+            <button id="MotorControl" class="top-menu-item selected">Motor Control</button>
+            <button id="TroubleShooting" class="top-menu-item" >Troubleshooting</button>
+        </div>
+        <div id="ScreenMotorControl">
         <div class="switchbox">
         <input id="powerswitch" type="checkbox" class="checkbox ui-stoggle--hidden"><br />
 
@@ -37,7 +42,13 @@
             data-min="-40"
             data-max="40"
             value="0" />
+            <div class="motorInput">
+                <img id="motor1leftarrow" class="arrow" src="img/dark-leftarrow.png" />
+                <input id="motor1inputbox" class="motorInputBox" type="text" maxlength="3" value="0" />
+                <img id="motor1rightarrow" class="arrow" src="img/dark-rightarrow.png" />
+            </div>
         </div>
+        
         <div class="motor">
             <p>Motor 2</p>
             <input id="motor2" class="knob" 
@@ -52,6 +63,11 @@
             data-min="-40"
             data-max="40"
             value="0"  />
+            <div class="motorInput">
+                <img id="motor2leftarrow" class="arrow" src="img/dark-leftarrow.png" />
+                <input id="motor2inputbox" class="motorInputBox" type="text" maxlength="3" value="0" />
+                <img id="motor2rightarrow" class="arrow" src="img/dark-rightarrow.png" />
+            </div>
         </div>  
         <div class="statusbox">
         <input id="powerswitch" type="checkbox" class="checkbox ui-stoggle--hidden"><br />
@@ -61,7 +77,7 @@
             <label class="statuslabel">Motor 2: </label><label id="motor2status" class="status-off">OFF</label><br />
             <label class="statuslabel">SOM: </label><label id="somstatus" class="status-off">OFF</label><br />
         </div>
-    
-        
+        </div>
+        <div id="ScreenTroubleShooting"> <p>TroubleShooting</p></div>   
     </body>
 </html>

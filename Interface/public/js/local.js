@@ -13,6 +13,7 @@ $(function($) {
      motor1.knob({
       change : function (value) {
           console.log("change1 : " + value);
+          $('#motor1inputbox').val(Math.round(value))
       },
       release : function (value) {
           //console.log(this.$.attr('value'));
@@ -33,6 +34,7 @@ $(function($) {
       motor2.knob({
       change : function (value) {
           console.log("change1 : " + value);
+          $('#motor2inputbox').val(Math.round(value))
       },
       release : function (value) {
           //console.log(this.$.attr('value'));
@@ -56,7 +58,6 @@ $(function($) {
     $('#powerswitch').click(function() {
       
       if ($(this).is(':checked')) {
-        //$('.knob').trigger('configure', {'readonly':false});
         $('.motor').css('pointer-events','auto');
         $('.knob').trigger('configure', {'fgColor':fg_color_enable}, {'bgColor':bg_color_enable});
         $('#motor1').val(motor1.val()).trigger('change');
@@ -72,5 +73,95 @@ $(function($) {
         $('.status-off').text('OFF');
       }
   });
+  var timeout = null;
+  $('#motor1inputbox').keyup( function() { 
+    var obj = this;
+    if (timeout !== null) {
+        clearTimeout(timeout);
+    }
+    timeout = setTimeout(function () {
+    var value = parseInt($(obj).val());
+    if(value > 40) {
+      $(obj).val('40');
+      $('#motor1inputbox').val("40");
+    }
+    if(value < -40) {
+      $(obj).val("-40");
+      $('#motor1inputbox').val("-40");
+    }
+    motor1.val($(obj).val());
+    $('#motor1').val(motor1.val()).trigger('change');
+    }, 1000);
+  });
+
+  $('#motor2inputbox').keyup( function() { 
+    var obj = this;
+    if (timeout !== null) {
+        clearTimeout(timeout);
+    }
+    timeout = setTimeout(function () {
+    var value = parseInt($(obj).val());
+    if(value > 40) {
+      $(obj).val('40');
+      $('#motor2inputbox').val("40");
+    }
+    if(value < -40) {
+      $(obj).val("-40");
+      $('#motor2inputbox').val("-40");
+    }
+    motor2.val($(obj).val());
+    $('#motor2').val(motor2.val()).trigger('change');
+    }, 1000);
+  });
+
+  $('#motor1leftarrow').click( function() {
+      var value = parseInt(motor1.val()) - 1;
+      if (value < -40)
+        value = -40;
+      $('#motor1inputbox').val(value);
+      motor1.val(value);
+      $('#motor1').val(motor1.val()).trigger('change');
+  });
+  $('#motor1rightarrow').click( function() {
+    var value = parseInt(motor1.val()) + 1;
+    if (value > 40)
+      value = 40;
+    $('#motor1inputbox').val(value);
+    motor1.val(value);
+    $('#motor1').val(motor1.val()).trigger('change');
+  });
+
+  $('#motor2leftarrow').click( function() {
+    var value = parseInt(motor2.val()) - 1;
+    if (value < -40)
+      value = -40;
+    $('#motor2inputbox').val(value);
+    motor2.val(value);
+    $('#motor2').val(motor2.val()).trigger('change');
+});
+$('#motor2rightarrow').click( function() {
+  var value = parseInt(motor2.val()) + 1;
+  if (value > 40)
+    value = 40;
+  $('#motor12nputbox').val(value);
+  motor2.val(value);
+  $('#motor2').val(motor2.val()).trigger('change');
+});
+
+
+
+  $('#MotorControl').click(function (){
+      $('#ScreenMotorControl').show();
+      $('#ScreenTroubleShooting').hide();
+      $('#TroubleShooting').removeClass('selected');
+      $(this).addClass('selected');
+  });
+
+  $('#TroubleShooting').click(function (){
+    $('#ScreenMotorControl').hide();
+    $('#ScreenTroubleShooting').show();
+    $('#MotorControl').removeClass('selected');
+    $(this).addClass('selected');
+   });
    
  });

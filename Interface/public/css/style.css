@@ -1,10 +1,38 @@
+.dark {
+    background-color: black;
+}
+
+.light {
+    background-color: white;
+}
+
+.dark > .top-menu {
+    width: 405px;
+    margin: 0 auto;
+    background-color:  #4a4646;
+}
+
+.dark > .top-menu > .top-menu-item {
+    background-color: #4a4646;
+    width: 200px;
+    color: white;
+}
+
+.dark > .top-menu > .top-menu-item:hover {
+    background-color: #4d2834;
+    min-width: 200px;
+}
+
+.dark > .top-menu > .top-menu-item.selected {
+    color:#1bf782;
+}
+
 body {
 padding: 0;
 margin: 0px 50px;
 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-weight: 300;
 text-rendering: optimizelegibility;
-background-color: #000000;
 }
 
 p {
@@ -64,6 +92,30 @@ font-size: 20px;
 color: #1bf782; 
 line-height: 30px;
 font-weight: 900;
+}
 
-  
+.arrow {
+   clear: both;
+   display: inline-block;
+   max-width:150px;
+   max-height:50px;
+   width: auto;
+   height: auto;
+}
+
+.motorInputBox {
+    clear: both;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 20px;
+    font-size: 18px;
+    text-align: center;
+    top:-20px;
+    position: relative;
+}
+
+#ScreenTroubleShooting {
+    color:red;
+    display: none;
 }
