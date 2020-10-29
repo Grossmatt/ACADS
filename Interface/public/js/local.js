@@ -1,15 +1,50 @@
-$(document).ready(function () {
- 
-});
+var fg_color_enable;
+var fg_color_disable;
+var bg_color_enable;
+var bg_color_disable;
+
+
+function ToggleMotorColors() {
+  if($('body').hasClass('dark')) {
+    $('#motor1leftarrow').attr('src','img/dark-leftarrow.png');
+    $('#motor1rightarrow').attr('src','img/dark-rightarrow.png');
+    $('#motor2leftarrow').attr('src','img/dark-leftarrow.png');
+    $('#motor2rightarrow').attr('src','img/dark-rightarrow.png');
+    fg_color_enable = '#1bf782';
+    fg_color_disable = '#4d2834';
+    bg_color_enable = '#4a4646';
+    bg_color_disable = '#4a4646';
+   } else {
+    $('#motor1leftarrow').attr('src','img/light-leftarrow.png');
+    $('#motor1rightarrow').attr('src','img/light-rightarrow.png');
+    $('#motor2leftarrow').attr('src','img/light-leftarrow.png');
+    $('#motor2rightarrow').attr('src','img/light-rightarrow.png');
+    fg_color_enable = ' #0099ff';
+    fg_color_disable = '#008080';
+    bg_color_enable = '#f3f2f2';
+    bg_color_disable = '#f3f2f2';
+   }
+}
+
+function EnableDisableKnobs(action) {
+  if (action == 0) {
+    $('.motor').css('pointer-events','none');
+    
+    $('.knob').trigger('configure', {'fgColor':fg_color_disable});
+    $('.knob').trigger('configure', {'bgColor':bg_color_disable}); 
+  } else {
+    $('.motor').css('pointer-events','auto');
+    $('.knob').trigger('configure', {'fgColor':fg_color_enable});
+    $('.knob').trigger('configure', {'bgColor':bg_color_enable});
+  }
+}
+
    
 $(function($) {
      var motor1 = $('#motor1');
      var motor2 = $('#motor2');
-     var fg_color_enable = '#1bf782';
-      var fg_color_disable = '#4d2834';
-      var bg_color_enable = '#4a4646';
-      var bg_color_disable = '#4d2834';
-      $('.motor').css('pointer-events','none');
+     ToggleMotorColors();
+     
      motor1.knob({
       change : function (value) {
           console.log("change1 : " + value);
@@ -52,27 +87,52 @@ $(function($) {
       }
      });
 
-    $('.knob').trigger('configure', {'fgColor':fg_color_disable}, {'bgColor':bg_color_disable});
+    EnableDisableKnobs(0);
+    
     $('#motor1').val(motor1.val()).trigger('change');
     $('#motor2').val(motor2.val()).trigger('change');
     $('#powerswitch').click(function() {
-      
-      if ($(this).is(':checked')) {
-        $('.motor').css('pointer-events','auto');
-        $('.knob').trigger('configure', {'fgColor':fg_color_enable}, {'bgColor':bg_color_enable});
+      if($(this).children('input').is(':checked')) {
+        EnableDisableKnobs(1);
         $('#motor1').val(motor1.val()).trigger('change');
         $('#motor2').val(motor2.val()).trigger('change');
         $('.status-off').addClass('status-on').removeClass('status-off');
-        $('.status-on').text('ON');
       } else {
-        $('.motor').css('pointer-events','none');
-        $('.knob').trigger('configure', {'fgColor':fg_color_disable}, {'bgColor':bg_color_disable});
+        EnableDisableKnobs(0);
         $('#motor1').val(motor1.val()).trigger('change');
         $('#motor2').val(motor2.val()).trigger('change');
         $('.status-on').addClass('status-off').removeClass('status-on');
-        $('.status-off').text('OFF');
       }
   });
+  $('#modeswitch').click(function() {
+    if($(this).children('input').is(':checked')) {
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .informationbox, .statusbox, .bottomcolumn').addClass('dark').removeClass('light');
+      ToggleMotorColors();
+      if($('#powerswitch').children('input').is(':checked')) {
+        EnableDisableKnobs(1);
+        $('#motor1').val(motor1.val()).trigger('change');
+        $('#motor2').val(motor2.val()).trigger('change');
+      } else {
+        EnableDisableKnobs(0);
+        $('#motor1').val(motor1.val()).trigger('change');
+        $('#motor2').val(motor2.val()).trigger('change');
+      }
+    } else {
+      ToggleMotorColors();
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .informationbox, .statusbox, .bottomcolumn').addClass('light').removeClass('dark');
+      ToggleMotorColors();
+      if($('#powerswitch').children('input').is(':checked')) {
+        EnableDisableKnobs(1);
+        $('#motor1').val(motor1.val()).trigger('change');
+        $('#motor2').val(motor2.val()).trigger('change');
+
+      } else {
+        EnableDisableKnobs(0);
+        $('#motor1').val(motor1.val()).trigger('change');
+        $('#motor2').val(motor2.val()).trigger('change');
+      }
+    }
+});
   var timeout = null;
   $('#motor1inputbox').keyup( function() { 
     var obj = this;
@@ -103,7 +163,6 @@ $(function($) {
     var value = parseInt($(obj).val());
     if(value > 40) {
       $(obj).val('40');
-      $('#motor2inputbox').val("40");
     }
     if(value < -40) {
       $(obj).val("-40");
@@ -143,7 +202,7 @@ $('#motor2rightarrow').click( function() {
   var value = parseInt(motor2.val()) + 1;
   if (value > 40)
     value = 40;
-  $('#motor12nputbox').val(value);
+  $('#motor2inputbox').val(value);
   motor2.val(value);
   $('#motor2').val(motor2.val()).trigger('change');
 });

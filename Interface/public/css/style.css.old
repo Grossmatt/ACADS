@@ -1,0 +1,167 @@
+.dark {
+    background-color: black;
+}
+
+.light {
+    background-color: white;
+}
+
+.dark > .top-menu {
+    width: 405px;
+    margin: 0 auto;
+    background-color:  #4a4646;
+}
+
+.dark > .top-menu > .top-menu-item {
+    background-color: #4a4646;
+    width: 200px;
+    color: white;
+}
+
+.dark > .top-menu > .top-menu-item:hover {
+    background-color: #4d2834;
+    min-width: 200px;
+}
+
+.dark > .top-menu > .top-menu-item.selected {
+    color:#1bf782;
+}
+
+.control-button:hover {
+    background-color: #4d2834;
+    min-width: 200px;
+}
+
+.control-button {
+    background-color: #4a4646;
+    width: 200px;
+    color: white;
+}
+
+
+.topcontrol {
+    margin: 0 auto;
+    width:100%;
+    clear:both;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+body {
+padding: 0;
+margin: 0px 50px;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-weight: 300;
+text-rendering: optimizelegibility;
+}
+
+p {
+font-size: 30px; 
+line-height: 30px;
+
+}
+
+div.motor {
+text-align: center; 
+width: 25%; 
+float: left;
+height:350px;
+}
+
+div.motor > p {
+font-size: 20px;
+color: #518a77;
+
+}
+
+div.statusbox {
+text-align: left; 
+width: 100%;
+margin-left:20px; 
+}
+
+div.switchbox {
+padding-top: 25px;
+text-align: right; 
+width: 25%; 
+}
+
+div.statusbox > .statuslabel {
+  
+font-size: 20px;
+color: #518a77; 
+line-height: 30px;
+
+  
+}
+
+div.statusbox > .status-off {
+  
+font-size: 20px;
+color: #75040f; 
+line-height: 30px;
+
+  
+}
+
+
+div.statusbox > .status-on {
+  
+font-size: 20px;
+color: #1bf782; 
+line-height: 30px;
+font-weight: 900;
+}
+
+.arrow {
+   clear: both;
+   display: inline-block;
+   max-width:150px;
+   max-height:50px;
+   width: auto;
+   height: auto;
+}
+
+.motorInputBox {
+    clear: both;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 20px;
+    font-size: 18px;
+    text-align: center;
+    top:-20px;
+    position: relative;
+}
+
+#ScreenTroubleShooting {
+    color:red;
+    display: none;
+}
+
+.bottomcontrol {
+    margin: 0 auto;
+    background-color: blue;
+    clear:both;
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+
+}
+
+.informationbox {
+    height: 350px;
+    width: 250px;
+    border: 2px solid #1bf782;
+    text-align: center;
+}
+
+.informationbox > h1 {
+    color: #75040f;
+}
