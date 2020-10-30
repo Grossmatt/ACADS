@@ -1,9 +1,9 @@
 body.light {
-    background-color: lightcyan;
+    background-color: white;
 }
 
 body.dark {
-    background-color: black;
+    background-color: #1a1a1a;
 }
 p {
 font-size: 30px; 
