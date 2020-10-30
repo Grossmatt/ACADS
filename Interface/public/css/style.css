@@ -380,3 +380,54 @@ font-size: 20px;
 #motor1.dark, #motor2.dark {
   color: #1bf782 !important;
 }
+
+.logbox{
+    margin: 0 auto;
+    height: 300px;
+    width: 850px;
+    padding: 5px;
+    overflow: auto;
+
+    counter-reset: linenumbers;
+}
+
+log{
+    counter-increment: linenumbers;
+}
+
+.logbox log::before{
+    content: counter(linenumbers);
+    color: gray;
+    margin-right: 10px
+}
+
+.logbox.light {
+    border: 2px solid #0099ff;
+    background-color: whitesmoke;
+    color: black;
+}
+
+.logbox.dark {
+    border: 2px solid #1bf782;
+    background-color: #333333;
+    color: #f72237;
+}
+
+/* margin block? so that different devices work?*/
+.datetimebox{
+    margin: 50px auto auto auto;
+}
+.datetimebox.light label{
+    display: block;
+    color: black;
+}
+
+.datetimebox.dark label{
+    display: block;
+    color: #f72237;
+}
+
+/* for dark/light theme*/
+.datetimeselect{
+    
+}

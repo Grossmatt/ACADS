@@ -106,7 +106,7 @@ $(function($) {
   });
   $('#modeswitch').click(function() {
     if($(this).children('input').is(':checked')) {
-      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .informationbox, .statusbox, .bottomcolumn, .control-button').addClass('dark').removeClass('light');
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .informationbox, .statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox').addClass('dark').removeClass('light');
       ToggleMotorColors();
       if($('#powerswitch').children('input').is(':checked')) {
         EnableDisableKnobs(1);
@@ -119,7 +119,7 @@ $(function($) {
       }
     } else {
       ToggleMotorColors();
-      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .informationbox, .statusbox, .bottomcolumn, .control-button').addClass('light').removeClass('dark');
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .informationbox, .statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox').addClass('light').removeClass('dark');
       ToggleMotorColors();
       if($('#powerswitch').children('input').is(':checked')) {
         EnableDisableKnobs(1);
