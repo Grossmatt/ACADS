@@ -2,7 +2,9 @@ var fg_color_enable;
 var fg_color_disable;
 var bg_color_enable;
 var bg_color_disable;
-
+var brake_voltages = [];
+var power_voltages = [];
+var poweron = 0;
 
 function ToggleMotorColors() {
   if($('body').hasClass('dark')) {
@@ -39,9 +41,153 @@ function EnableDisableKnobs(action) {
   }
 }
 
+function GetTestData(url) {
+  
+  $.ajax({url: url, success: function(result){
+
+    var data = result;
+    updateMotor1(data.pos_motor1);
+    updateMotor2(data.pos_motor2);
+    $('#motor1inputbox').val(Math.round(data.pos_motor1));
+    $('#motor2inputbox').val(Math.round(data.pos_motor2));
+    
+    if (data.power == 0) {
+      alert("System is OFF");
+      PowerOff();
+      return;
+    } else {
+      PowerOn();
+    }
+    
+    
+    var braking_total = 0.00;
+    var power_total = 0.00;
+
+    for (var key in data) {
+      
+      if (key.substring(0,6) == "status") {
+        if (data[key] == 1) {
+           $('#'+key).text("OK").addClass('status-on').removeClass('status-off').removeClass('status-error');
+
+        } else {
+          $('#'+key).text("ERR").addClass('status-error').removeClass('status-off').removeClass('status-on');
+        }
+        
+      } else if (key.substring(0,7) == "voltage") {
+        if (data[key] > 0) {
+          $('#'+key).text(data[key]).addClass('status-on').removeClass('status-off').removeClass('status-error');
+        } else {
+          $('#'+key).text("0.00").addClass('status-error').removeClass('status-off').removeClass('status-on');
+        }
+
+        if (key.includes("megacap")) {
+          braking_total += parseFloat(data[key]);
+        }
+
+        if (key.includes("powersupply")) {
+          power_total += parseFloat(data[key]);
+        }
+
+      } 
+    }
+    brake_voltages.push(braking_total);
+    power_voltages.push(power_total);
+
+    var powersum =   power_voltages.reduce(function(a, b) { return a + b; }, 0);
+    var brakesum =   brake_voltages.reduce(function(a, b) { return a + b; }, 0);
+
+    if (powersum > 0) {
+      $('#power_total').text(power_total.toFixed(2)).addClass('status-on').removeClass('status-off').removeClass('status-error');
+      $('#average_power').text(averagePower()).addClass('status-on').removeClass('status-off').removeClass('status-error');   
+    } else {
+      $('#power_total').text(power_total).addClass('status-error').removeClass('status-off').removeClass('status-on');
+      $('#average_power').text(averagePower()).addClass('status-erro').removeClass('status-off').removeClass('status-on');   
+    }
+
+    if (brakesum > 0) {
+      $('#braking_total').text(braking_total.toFixed(2)).addClass('status-on').removeClass('status-off').removeClass('status-error');
+      $('#average_braking').text(averageBraking()).addClass('status-on').removeClass('status-off').removeClass('status-error');
+      $('#average_braking_5s').text(averageBrakingMA(5)).addClass('status-on').removeClass('status-off').removeClass('status-error');
+      $('#average_braking_10s').text(averageBrakingMA(10)).addClass('status-on').removeClass('status-off').removeClass('status-error');
+      $('#average_braking_30s').text(averageBrakingMA(30)).addClass('status-on').removeClass('status-off').removeClass('status-error');
+    } else {
+      $('#braking_total').text(braking_total).addClass('status-error').removeClass('status-off').removeClass('status-on');
+      $('#average_braking').text(averageBraking()).addClass('status-error').removeClass('status-off').removeClass('status-on');
+      $('#average_braking_5s').text(averageBrakingMA(5)).addClass('status-error').removeClass('status-off').removeClass('status-on');
+      $('#average_braking_10s').text(averageBrakingMA(10)).addClass('status-error').removeClass('status-off').removeClass('status-on');
+      $('#average_braking_30s').text(averageBrakingMA(30)).addClass('status-error').removeClass('status-off').removeClass('status-on');
+    }
+
+
+  }});
+}
+
+function averagePower() {
+  var sum = power_voltages.reduce(function(a, b) { return a + b; }, 0);
+  var average = sum / power_voltages.length;
+  return average.toFixed(2);
+}
+
+function averageBraking() {
+  var sum = brake_voltages.reduce(function(a, b) { return a + b; }, 0);
+  var average = sum / brake_voltages.length;
+  return average.toFixed(2);
+}
+
+function averageBrakingMA(seconds) {
+  var i = 0.00;
+  var sum = 0.00;
+  if (seconds <= brake_voltages.length) {
+    for (i = brake_voltages.length - 1; i >= brake_voltages.length - seconds; i--) {
+    console.log(brake_voltages[i]);
+    sum += brake_voltages[i];
+    }
+   var average = (sum / seconds).toFixed(2);
+  } else {
+    var average = averageBraking();
+  }
+  return average;
+}
+
+function updateMotor1(pos) {
+  $('#motor1').val(pos).trigger('change');
+}
+
+function updateMotor2(pos) {
+  $('#motor2').val(pos).trigger('change');
+}
+
+
+function PowerOn () {
+  var motor1 = $('#motor1');
+  var motor2 = $('#motor2');
+  EnableDisableKnobs(1);
+  poweron = 1.
+  $('#motor1').val(motor1.val()).trigger('change');
+  $('#motor2').val(motor2.val()).trigger('change');
+  $('#powerswitch').children('input').prop('checked',true)
+  $('#power').text("ON").addClass('status-on').removeClass('status-error').removeClass('status-off');
+}
+
+function PowerOff () {
+  var motor1 = $('#motor1');
+     var motor2 = $('#motor2');
+  EnableDisableKnobs(0);
+  poweron = 0;
+  $('#motor1').val(motor1.val()).trigger('change');
+  $('#motor2').val(motor2.val()).trigger('change');
+  $('#powerswitch').children('input').prop('checked',false)
+  $('#power').text("OFF").addClass('status-off').removeClass('status-error').removeClass('status-on');
+  $('.status').text("OFF").addClass('status-off').removeClass('status-error').removeClass('status-on');
+  $('.voltage').text("0.00").addClass('status-off').removeClass('status-error').removeClass('status-on');
+  brake_voltages = [];
+  power_voltages = [];
+ // $('.status-on').addClass('status-off').removeClass('status-on');
+}
    
 $(function($) {
-     var motor1 = $('#motor1');
+
+  var motor1 = $('#motor1');
      var motor2 = $('#motor2');
      ToggleMotorColors();
      
@@ -93,15 +239,9 @@ $(function($) {
     $('#motor2').val(motor2.val()).trigger('change');
     $('#powerswitch').click(function() {
       if($(this).children('input').is(':checked')) {
-        EnableDisableKnobs(1);
-        $('#motor1').val(motor1.val()).trigger('change');
-        $('#motor2').val(motor2.val()).trigger('change');
-        $('.status-off').addClass('status-on').removeClass('status-off');
+       PowerOn();
       } else {
-        EnableDisableKnobs(0);
-        $('#motor1').val(motor1.val()).trigger('change');
-        $('#motor2').val(motor2.val()).trigger('change');
-        $('.status-on').addClass('status-off').removeClass('status-on');
+        PowerOff();
       }
   });
   $('#modeswitch').click(function() {
@@ -222,5 +362,8 @@ $('#motor2rightarrow').click( function() {
     $('#MotorControl').removeClass('selected');
     $(this).addClass('selected');
    });
-   
+
+   $('#jsontest').click(function () {
+     GetTestData('json/example.json');
+   });   
  });
