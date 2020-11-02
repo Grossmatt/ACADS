@@ -399,10 +399,15 @@ font-size: 20px;
   color: #1bf782 !important;
 }
 
+.logcolumn{
+  display: flex;
+  flex-direction: column;
+}
+
 .logbox{
     margin: 0 auto;
     height: 300px;
-    width: 850px;
+    width: 100%;
     padding: 5px;
     overflow: auto;
 
@@ -433,7 +438,7 @@ log{
 
 /* margin block? so that different devices work?*/
 .datetimebox{
-    margin: 50px auto auto auto;
+    margin: auto auto auto auto;
 }
 .datetimebox.light label{
     display: block;
@@ -445,7 +450,11 @@ log{
     color: #f72237;
 }
 
+.submitbutton{
+  margin: 20px auto auto auto;
+  align: center;
+}
+
 /* for dark/light theme*/
 .datetimeselect{
-    
 }
