@@ -80,28 +80,20 @@
     </div>     
 </div>
 <div class="row">
-    <div class="bottomcolumn light">
-        <div class="informationbox light">
-            <h1>Voltages</h1>
+    <div class="middlecolumn">
+        <div class="s_informationbox light">
             <div class="statusbox light">
-                    <label class="statuslabel">Power Supply 1: </label><label id="voltage_powersupply1" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Power Supply 2: </label><label id="voltage_powersupply2" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Power Supply 3: </label><label id="voltage_powersupply3" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">MegaCap 1: </label><label id="voltage_megacap1" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">MegaCap 2: </label><label id="voltage_megacap2" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Total System: </label><label id="power_total" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Total Braking:  </label><label id="braking_total" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Average Power:  </label><label id="average_power" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Average Braking:  </label><label id="average_braking" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Average Braking 5s:  </label><label id="average_braking_5s" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Average Braking 10s:  </label><label id="average_braking_10s" class="voltage status-off">0.00</label><br />
-                    <label class="statuslabel">Average Braking 30s:  </label><label id="average_braking_30s" class="voltage status-off">0.00</label><br />
-                </div>
+            <label class="statuslabel">Input Voltage:  </label><label id="voltage_input" class="voltage status-off">0.00</label><br />
+            <label class="statuslabel">Input Voltage 5s:  </label><label id="voltage_input_5s" class="voltage status-off">0.00</label><br />
+            <label class="statuslabel">Input Voltage 10s:  </label><label id="voltage__input_10s" class="voltage status-off">0.00</label><br />
+            <label class="statuslabel">Input Voltage 30s:  </label><label id="voltage_Input_30s" class="voltage status-off">0.00</label><br />
+            </div>
         </div>
     </div>
+</div>
+<div class="row">
     <div class="bottomcolumn light">
         <div class="informationbox light">
-            <h1>Functions</h1>
                 <button class="control-button" id="functionalitycheck">Functionality Check</button>
                 <button class="control-button" id="reset">Reset</button>
                 <button class="control-button" id="jsontest">JSON Test</button>
@@ -109,15 +101,22 @@
     </div> 
     <div class="bottomcolumn light">
         <div class="informationbox light">
-            <h1>Status</h1>
             <div class="statusbox light">
-                <label class="statuslabel">Power</label>: </label><label id="power" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Encoder 1: </label><label id="status_encoder1" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Encoder 2: </label><label id="status_encoder2" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Hall Sensor 1: </label><label id="status_hallsensor1" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Hall Sensor 2: </label><label id="status_hallsensor2" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Motor 1: </label><label id="status_motor1" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Motor 2: </label><label id="status_motor2" class="status status-off">OFF</label><br />
+                 <label class="statuslabel">Microcontroller 1: </label><label id="status_microcontroller1" class="status status-off">OFF</label><br />
+                 <label class="statuslabel">Microcontroller 2: </label><label id="status_microcontroller2" class="status status-off">OFF</label><br />
+                 </div>
+            </div>
+        </div>
+        <div class="bottomcolumn light">
+            <div class="informationbox light">
+              <div class="statusbox light">
+                 <label class="statuslabel">Power</label>: </label><label id="power" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Power Supply 1: </label><label id="status_powersupply1" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Power Supply 2: </label><label id="status_powersupply2" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Power Supply 3: </label><label id="status_powersupply3" class="status status-off">OFF</label><br />
@@ -125,16 +124,13 @@
                  <label class="statuslabel">MegaCap 2: </label><label id="status_megacap2" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Braking Circuit 1: </label><label id="status_braking_circuit1" class="status status-off">OFF</label><br />
                  <label class="statuslabel">Braking Circuit 2: </label><label id="status_braking_circuit2" class="status status-off">OFF</label><br />
-                 <label class="statuslabel">Microcontroller 1: </label><label id="status_microcontroller1" class="status status-off">OFF</label><br />
-                 <label class="statuslabel">Microcontroller 2: </label><label id="status_microcontroller2" class="status status-off">OFF</label><br />
-
                 </div>
-        </div>
-    </div>      
+            </div>
+        </div>      
 </div>
     </div>
     <div id="ScreenTroubleShooting" style="display: none;"> <p>TroubleShooting</p>        <!--this vs textarea?-->
-        <div class="logbox light"> <!--Will need javascript code to import JSON from gets and use the text() function to insert them here I believe. I have a couple of resources saved to try?-->
+        <div id='logbox' class="logbox light"> <!--Will need javascript code to import JSON from gets and use the text() function to insert them here I believe. I have a couple of resources saved to try?-->
             <log>troubleshooting<br></log>
             <log>TEST<br></log>
             <log>troubleshooting<br></log>

@@ -59,6 +59,7 @@ line-height: 30px;
 }
 
 .control-button {
+  margin-top: 3px;
   width: 200px;
 }
 .control-button.light:hover {
@@ -98,12 +99,20 @@ line-height: 30px;
     
 }
 
+.middlecolumn {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex:1;
+  height: 150px;
+}
+
 .bottomcolumn {
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-    flex: 4;
-    height: 550px;
+    flex: 6;
+    height: 250px;
 }
 
 
@@ -120,11 +129,12 @@ font-size: 20px;
 }
 
 .motor.dark > p {
-  color: #4a4646;
+  color: #518a77;
 }
 
 
 .statusbox {
+    padding: 10px 0 10px 0;
     text-align: right; 
     margin-right:60px; 
 }
@@ -245,12 +255,20 @@ font-size: 20px;
     text-align: center;
 }
 
-.informationbox.light {
+.s_informationbox {
+  margin: 0 auto;
+  height: 15opx;
+  width: 250px;
+  text-align: center;
+}
+
+
+.informationbox.light, .s_informationbox.light {
   border: 2px solid #0099ff;
   background-color: whitesmoke;
 }
 
-.informationbox.dark {
+.informationbox.dark, .s_informationbox.dark {
   border: 2px solid #1bf782;
   background-color: #333333;
 }
@@ -452,9 +470,6 @@ log{
 
 .submitbutton{
   margin: 20px auto auto auto;
-  align: center;
+  text-align: center;
 }
 
-/* for dark/light theme*/
-.datetimeselect{
-}

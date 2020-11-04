@@ -13,15 +13,31 @@
     "status_powersupply1": "1",
     "status_powersupply2": "1",
     "status_powersupply3": "1",
-    "voltage_powersupply1": "20.42",
-    "voltage_powersupply2": "24.12",
-    "voltage_powersupply3": "15.42",
     "status_megacap1": "1",
     "status_megacap2": "1",
-    "voltage_megacap1": "2.42",
-    "voltage_megacap2": "2.12",
     "status_braking_circuit1": "0",
     "status_braking_circuit2": "1",
     "status_microcontroller1": "1",
-    "status_microcontroller2": "1"
+    "status_microcontroller2": "1",
+    "voltage_input": "7.88",
+    "voltage_input_5s": "6.53",
+    "voltage__input_10s": "6.44",
+    "voltage_Input_30s": "6.45",
+    "logentries" : {
+      "1" : { 
+        "timestamp" : "2014-03-19 18:00:05-04:00", 
+        "action" : "Power On System",
+        "data" : 0
+      },
+      "2" : { 
+        "timestamp" : "2014-03-19 18:00:05-04:00", 
+        "action" : "Reposition Motor 1",
+        "data" : 0
+      },
+      "3" : { 
+        "timestamp" : "2014-03-19 18:00:05-04:00", 
+        "action" : "Reposition Motor 1",
+        "data" : 0
+      }
+    }
   }
