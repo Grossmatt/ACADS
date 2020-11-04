@@ -93,7 +93,7 @@ function GetTestData(url) {
 
     for (var key in data.logentries) {
       var logentry = data.logentries[key];
-      AddLogEntry(logentry.timestamp + "  |  " + logentry.action + "  |  " + logentry.data);
+      AddLogEntry(logentry.timestamp + "  |  " + "  |  "+ logentry.verb + "  |  " + logentry.action + "  |  " + logentry.data);
     }
     
     for (var key in data) {

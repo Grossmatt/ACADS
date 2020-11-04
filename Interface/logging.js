@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-function LogEntry(action, data) {
+function LogEntry(verb, action, data) {
 
     var date_ob = new Date();
 // current date
@@ -24,7 +24,7 @@ function LogEntry(action, data) {
     // current seconds
     let seconds = date_ob.getSeconds();
 
-    var logstring = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds + "|" + action + "|" + data +"\n";
+    var logstring = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds + "|" + verb + "|" + action + "|" + data +"\n";
     var filename = './public/logs/'+year+month+day+'_ACADS.log';
     fs.appendFile(filename, logstring , function (err) {
         if (err) 

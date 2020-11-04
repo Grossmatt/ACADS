@@ -45,18 +45,18 @@ api_app.post('/api/ACADS', function(req, res, next) {
 
     if (power != power_state) {
       if (power == 0) {
-        logging.LogEntry('System Power Off', 0);
+        logging.LogEntry('Power','System Power Off', 0);
       } else {
-        logging.LogEntry('System Power On', 1);
+        logging.LogEntry('Power','System Power On', 1);
       }
     }
 
     if (pos_motor1 != pos_motor1_state) {
-      logging.LogEntry('Motor 1 Position Change', pos_motor1)
+      logging.LogEntry('Motor1','Motor 1 Position Change', pos_motor1)
     }
 
     if (pos_motor2 != pos_motor2_state) {
-      logging.LogEntry('Motor 2 Position Change', pos_motor2)
+      logging.LogEntry('Motor2','Motor 2 Position Change', pos_motor2)
     }
 
     var obj = {"power": power, "pos_motor1" : pos_motor1, "pos_motor2": pos_motor2};
