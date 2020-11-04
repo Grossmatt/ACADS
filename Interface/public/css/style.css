@@ -417,9 +417,16 @@ font-size: 20px;
   color: #1bf782 !important;
 }
 
+.filtercolumn{
+  flex-grow: 1;
+  height: 300px;
+  margin-right: 30px;
+  flex-basis: auto;
+}
+
 .logcolumn{
-  display: flex;
-  flex-direction: column;
+  flex-grow: 18;
+  height: 300px;
 }
 
 .logbox{
@@ -473,3 +480,35 @@ log{
   text-align: center;
 }
 
+<<<<<<< HEAD
+=======
+/* for dark/light theme*/
+.datetimeselect{
+}
+
+.filterbox{
+  flex-grow: 1;
+
+  margin: 0 auto;
+  height: 300px;
+  width: 100%;
+  padding: 5px;
+  overflow: auto;
+}
+
+.filterbox.light {
+  border: 2px solid #0099ff;
+  background-color: whitesmoke;
+  color: black;
+}
+
+.filterbox.dark {
+  border: 2px solid #1bf782;
+  background-color: #333333;
+  color: #f72237;
+}
+
+.filtertest{
+  
+}
+>>>>>>> 73f066bca3cd11d76d7f41041da75d52499d0b7b
