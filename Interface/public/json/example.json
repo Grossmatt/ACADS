@@ -1,28 +1,28 @@
 {
-    "pos_motor1": "35",
-    "pos_motor2": "-15",
-    "quadrant_hallsensor1": "1",
-    "quadrant_hallsensor2": "4",
-    "power": "1",
-    "status_encoder1": "1",
-    "status_encoder2": "1",
-    "status_hallsensor1": "1",
-    "status_hallsensor2": "1",
-    "status_motor1": "1",
-    "status_motor2": "1",
-    "status_powersupply1": "1",
-    "status_powersupply2": "1",
-    "status_powersupply3": "1",
-    "status_megacap1": "1",
-    "status_megacap2": "1",
-    "status_braking_circuit1": "0",
-    "status_braking_circuit2": "1",
-    "status_microcontroller1": "1",
-    "status_microcontroller2": "1",
-    "voltage_input": "7.88",
-    "voltage_input_5s": "6.53",
-    "voltage__input_10s": "6.44",
-    "voltage_Input_30s": "6.45",
+    "pos_motor1": 35,
+    "pos_motor2": -15,
+    "quadrant_hallsensor1": 1,
+    "quadrant_hallsensor2": 4,
+    "power": 1,
+    "status_encoder1": 1,
+    "status_encoder2": 1,
+    "status_hallsensor1": 1,
+    "status_hallsensor2": 1,
+    "status_motor1": 1,
+    "status_motor2": 1,
+    "status_powersupply1": 1,
+    "status_powersupply2": 1,
+    "status_powersupply3": 1,
+    "status_megacap1": 1,
+    "status_megacap2": 1,
+    "status_braking_circuit1": 0,
+    "status_braking_circuit2": 1,
+    "status_microcontroller1": 1,
+    "status_microcontroller2": 1,
+    "voltage_input": 7.88,
+    "voltage_input_5s": 6.53,
+    "voltage__input_10s": 6.44,
+    "voltage_Input_30s": 6.45,
     "logentries" : {
       "1" : { 
         "timestamp" : "2014-03-19 18:00:05-04:00", 
@@ -32,12 +32,12 @@
       "2" : { 
         "timestamp" : "2014-03-19 18:00:05-04:00", 
         "action" : "Reposition Motor 1",
-        "data" : 0
+        "data" : 35
       },
       "3" : { 
         "timestamp" : "2014-03-19 18:00:05-04:00", 
-        "action" : "Reposition Motor 1",
-        "data" : 0
+        "action" : "Reposition Motor 2",
+        "data" : -15
       }
     }
   }

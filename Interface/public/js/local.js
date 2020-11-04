@@ -90,6 +90,12 @@ function GetTestData(url) {
       PowerOn();
     }
     
+
+    for (var key in data.logentries) {
+      var logentry = data.logentries[key];
+      AddLogEntry(logentry.timestamp + "  |  " + logentry.action + "  |  " + logentry.data);
+    }
+    
     for (var key in data) {
       
       if (key.substring(0,6) == "status") {
