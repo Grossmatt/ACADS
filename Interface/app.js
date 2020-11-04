@@ -5,7 +5,12 @@ const api_app = express()
 const web_port = 3000
 const api_port = 3001
 const bodyParser = require('body-parser')
+require('./logging.js');
 require('./control.js');
+
+var power_state = 0;
+var pos_motor1_state = 0;
+var pos_motor2_state = 0;
 
 web_app.use(express.static(path.join(__dirname, 'public')));
 
@@ -38,11 +43,33 @@ api_app.post('/api/ACADS', function(req, res, next) {
     var pos_motor1 = req.body.pos_motor1;
     var pos_motor2 = req.body.pos_motor2;
 
+    if (power != power_state) {
+      if (power == 0) {
+        LogEntry('System Power Off', 0);
+      } else {
+        LogEntry('System Power On', 1);
+      }
+      
+      if (pos_motor1 != pos_motor1_state) {
+        LogEntry('Motor 1 Position Change', pos_motor1)
+      }
+
+      if (pos_motor2 != pos_motor2_state) {
+        LogEntry('Motor 2 Position Change', pos_motor2)
+      }
+
+    }
+
     var obj = {"power": power, "pos_motor1" : pos_motor1, "pos_motor2": pos_motor2};
     var json = JSON.stringify(obj); 
     
     console.log(json);
     res.send(json);  
+
+   power_state = power;
+   pos_motor1_state = pos_motor1;
+   pos_motor2_state = pos_motor2;
+
     next();
 });
 
@@ -50,8 +77,6 @@ api_app.post('/api/ACADS', function(req, res, next) {
 api_app.listen(api_port, () => {
   console.log(`API app listening at http://localhost:${api_port}`)
 })
-    
-    
     
     
     
