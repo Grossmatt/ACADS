@@ -419,19 +419,19 @@ font-size: 20px;
 
 .filtercolumn{
   flex-grow: 1;
-  height: 300px;
+  height: 360px;
   margin-right: 30px;
   flex-basis: auto;
 }
 
 .logcolumn{
   flex-grow: 18;
-  height: 300px;
+  height: 360px;
 }
 
 .logbox{
     margin: 0 auto;
-    height: 300px;
+    height: 360px;
     width: 100%;
     padding: 5px;
     overflow: auto;
@@ -480,17 +480,11 @@ log{
   text-align: center;
 }
 
-<<<<<<< HEAD
-=======
-/* for dark/light theme*/
-.datetimeselect{
-}
-
 .filterbox{
   flex-grow: 1;
 
   margin: 0 auto;
-  height: 300px;
+  height: 360px;
   width: 100%;
   padding: 5px;
   overflow: auto;
@@ -507,8 +501,3 @@ log{
   background-color: #333333;
   color: #f72237;
 }
-
-.filtertest{
-  
-}
->>>>>>> 73f066bca3cd11d76d7f41041da75d52499d0b7b
