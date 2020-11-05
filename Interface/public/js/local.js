@@ -334,10 +334,16 @@ $('#motor2rightarrow').click( function() {
    });   
  });
 
-//I can't get this to work. I was trying the three-line example here:
-// https://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
-//https://stackoverflow.com/questions/2228382/how-to-select-all-checkboxes-with-jquery
-$('#filterall').change( function () {
-  var c = this.checked;
-  $( "input[type=checkbox]" ).prop('checked', c);
+//used this code, but found out I needed to have it in a document ready function?
+//https://dev.to/jackharner/select-all-checkboxes-with-jquery-31al
+$( document ).ready(function() {
+  $("#filterall").click(function() {
+    $("input[type=checkbox]").prop("checked", $(this).prop("checked"));
+  });
+
+  $("input[type=checkbox]").click(function() {
+    if (!$(this).prop("checked")) {
+        $("#filterall").prop("checked", false);
+    }
+  });
 });
