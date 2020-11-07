@@ -129,7 +129,22 @@
         </div>      
 </div>
     </div>
-    <div id="ScreenTroubleShooting" style="display: none;"> <p>TroubleShooting</p>        <!--this vs textarea?-->
+    <div id="ScreenTroubleShooting" style="display: none;">
+        <div class="row">
+            <div class="runidbox">
+                Run ID:
+                <br>
+                <button name="generaterunid" id="generaterunid" type=button>
+                    Generate New Run ID
+                </button>
+            </div>
+            <div class="runidbox">
+                <label for="runid">Select Run ID</label><br>
+                <select id="runid" name="runid" width="30px">
+                    <option value="1">1</option>
+                </select>
+            </div>
+        </div>
         <div class="row">
             <div class="filtercolumn">
                 <div class="filterbox light">
