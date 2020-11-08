@@ -5,6 +5,7 @@ var bg_color_disable;
 var _power = 0;
 var _posmotor1 = 0;
 var _posmotor2 = 0;
+var runidarray = [];
 
 function ToggleMotorColors() {
   if($('body').hasClass('dark')) {
@@ -218,7 +219,7 @@ $(function($) {
   });
   $('#modeswitch').click(function() {
     if($(this).children('input').is(':checked')) {
-      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox, .informationbox, .statusbox, .statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox, .filterbox').addClass('dark').removeClass('light');
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox, .informationbox, .statusbox, .statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox, .filterbox, .runidtext').addClass('dark').removeClass('light');
       ToggleMotorColors();
       if($('#powerswitch').children('input').is(':checked')) {
         EnableDisableKnobs(1);
@@ -231,7 +232,7 @@ $(function($) {
       }
     } else {
       ToggleMotorColors();
-      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox, .informationbox, .statusbox, s_statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox,. filterbox').addClass('light').removeClass('dark');
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox, .informationbox, .statusbox, s_statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox, .filterbox, .runidtext').addClass('light').removeClass('dark');
       ToggleMotorColors();
       if($('#powerswitch').children('input').is(':checked')) {
         EnableDisableKnobs(1);
@@ -348,7 +349,20 @@ $( document ).ready(function() {
   });
 });
 
+function populaterunidlist() {
 
+};
+
+// saves runid to array for it to list in select
+$(document).ready(function(){
+  $("#generaterunid").click(function(){
+      var rid = makeid(5);
+      $('#runidtext').html(rid);
+      runidarray.push(rid);
+  });
+});
+
+// Give random letters/numbers to supply run ID
 // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function makeid(length) {
   var result           = '';

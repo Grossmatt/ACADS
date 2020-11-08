@@ -132,14 +132,17 @@
     <div id="ScreenTroubleShooting" style="display: none;">
         <div class="row">
             <div class="runidbox">
-                Run ID:
+                <label for="runidtext" class="runidtext light">
+                Run ID:  	&nbsp;	&nbsp;
+                </label>
+                <text class="runidtext" name="runidtext" id="runidtext"></text>
                 <br>
                 <button name="generaterunid" id="generaterunid" type=button>
                     Generate New Run ID
                 </button>
             </div>
             <div class="runidbox">
-                <label for="runid">Select Run ID</label><br>
+                <label for="runid" class="runidtext light">Select Run ID</label><br>
                 <select id="runid" name="runid" width="30px">
                     <option value="1">1</option>
                 </select>
@@ -189,13 +192,16 @@
             </div>
         </div>
         <div class="row">
+            <input type="submit" class="submitbutton">
+        </div>
+        <!--
             <div class="logcolumn"></div>
             <div class="logcolumn">
                 <input type="submit" class="submitbutton">
             </div>
             <div class="logcolumn"></div>
         </div>
-        
+        -->
     </div> 
 </body>
 </html>

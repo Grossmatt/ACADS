@@ -1,3 +1,12 @@
+/* global var so we can change colors here instead of repetitively throughout */
+:root{
+  --dark-text-color: #f72237;
+  --light-text-color: black;
+  --dark-bg-color: #1a1a1a;
+  --light-bg-color: whitesmoke;
+}
+}
+
 body.light {
     background-color: white;
 }
@@ -278,7 +287,7 @@ font-size: 20px;
 }
 
 .informationbox.dark > h1 {
-    color: #f72237;
+    color: var(--dark-text-color);;
 }
 
 
@@ -451,14 +460,14 @@ log{
 
 .logbox.light {
     border: 2px solid #0099ff;
-    background-color: whitesmoke;
-    color: black;
+    background-color: var(--light-bg-color);;
+    color: var(--light-text-color);;
 }
 
 .logbox.dark {
     border: 2px solid #1bf782;
     background-color: #333333;
-    color: #f72237;
+    color: var(--dark-text-color);;
 }
 
 /* margin block? so that different devices work?*/
@@ -467,12 +476,12 @@ log{
 }
 .datetimebox.light label{
     display: block;
-    color: black;
+    color: var(--light-text-color);;
 }
 
 .datetimebox.dark label{
     display: block;
-    color: #f72237;
+    color: var(--dark-text-color);;
 }
 
 .submitbutton{
@@ -492,17 +501,29 @@ log{
 
 .filterbox.light {
   border: 2px solid #0099ff;
-  background-color: whitesmoke;
-  color: black;
+  background-color: var(--light-bg-color);;
+  color: var(--light-text-color);;
 }
 
 .filterbox.dark {
   border: 2px solid #1bf782;
   background-color: #333333;
-  color: #f72237;
+  color: var(--dark-text-color);;
 }
 
 .runidbox {
   
   margin: 25px auto 25px auto;
+}
+
+.runidtext{
+
+}
+
+.runidtext.light{
+  color: var(--light-text-color);
+}
+
+.runidtext.dark{
+  color: var(--dark-text-color);
 }
