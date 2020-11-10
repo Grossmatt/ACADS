@@ -8,6 +8,8 @@ const bodyParser = require('body-parser')
 const logging = require('./logging.js');
 const control = require('./control.js');
 
+console.log(control.i2cobject());
+
 var power_state = 0;
 var pos_motor1_state = 0;
 var pos_motor2_state = 0;

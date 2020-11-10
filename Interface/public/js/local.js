@@ -332,22 +332,25 @@ $('#motor2rightarrow').click( function() {
 
    $('#jsontest').click(function () {
      GetTestData('json/example.json');
-   });   
+   });
+   
+   $("#filterall").click(function() {
+    $(".filtertest").prop("checked", $(this).prop("checked"));
+  });
+
+  $(".filtertest").click(function() {
+    if (!$(this).prop("checked")) {
+        $("#filterall").prop("checked", false);
+    }
+
+    
+  });
+
  });
 
 //used this code, but found out I needed to have it in a document ready function?
 //https://dev.to/jackharner/select-all-checkboxes-with-jquery-31al
-$( document ).ready(function() {
-  $("#filterall").click(function() {
-    $("input[type=checkbox]").prop("checked", $(this).prop("checked"));
-  });
 
-  $("input[type=checkbox]").click(function() {
-    if (!$(this).prop("checked")) {
-        $("#filterall").prop("checked", false);
-    }
-  });
-});
 
 function populaterunidlist() {
 
