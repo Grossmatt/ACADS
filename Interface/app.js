@@ -44,6 +44,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
     var power = req.body.power;
     var pos_motor1 = req.body.pos_motor1;
     var pos_motor2 = req.body.pos_motor2;
+    var obj = new Object();
 
     if (power != power_state) {
       if (power == 0) {
@@ -60,17 +61,45 @@ api_app.post('/api/ACADS', function(req, res, next) {
     if (pos_motor2 != pos_motor2_state) {
       logging.LogEntry('Motor2','Motor 2 Position Change', pos_motor2)
     }
+      obj["pos_motor1"] = pos_motor1;
+      obj["pos_motor2"] = pos_motor2;
+      obj["quadrant_hallsensor1"] = 1;
+      obj["quadrant_hallsensor2"] = 4;
+      obj["power"] =  power;
+      obj["status_encoder1"] =  1;
+      obj["status_encoder2"] =  1;
+      obj["status_hallsensor1"] =  1;
+      obj["status_hallsensor2"] =  1;
+      obj["status_motor1"] =  1;
+      obj["status_motor2"] =  1;
+      obj["status_powersupply1"] =  1;
+      obj["status_powersupply2"] =  1;
+      obj["status_powersupply3"] =  1;
+      obj["status_megacap1"] =  1;
+      obj["status_megacap2"] =  1;
+      obj["status_braking_circuit1"] =  0;
+      obj["status_braking_circuit2"] =  1;
+      obj["status_microcontroller1"] =  1;
+      obj["status_microcontroller2"] =  1;
+      obj["voltage_input"] =  7.88;
+      obj["voltage_input_5s"] =  6.53;
+      obj["voltage__input_10s"] =  6.44;
+      obj["voltage_Input_30s"] =  6.45;
+      obj["logentries"] = {};
+      for (x in logging.logentries) {
+        var item = logging.logentries[x];
+        obj["logentries"][x] =  {"timestamp": item.timestamp, "runid": item.runid, "verb" : item.verb, "action": item.action, "data" : item.data};
+      }
 
-    var obj = {"power": power, "pos_motor1" : pos_motor1, "pos_motor2": pos_motor2};
     var json = JSON.stringify(obj); 
     
-    console.log(json);
-    res.send(json);  
+   // console.log(json);
+  res.send(json);  
 
    power_state = power;
    pos_motor1_state = pos_motor1;
    pos_motor2_state = pos_motor2;
-
+   logging.LogClear();
     next();
 });
 
@@ -78,11 +107,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
 api_app.listen(api_port, () => {
   console.log(`API app listening at http://localhost:${api_port}`)
 })
-    
-    
-    
-    
-    
+      
     
     
   

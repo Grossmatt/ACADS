@@ -5,6 +5,7 @@ var bg_color_disable;
 var _power = 0;
 var _posmotor1 = 0;
 var _posmotor2 = 0;
+var _runidchange = 0;
 var runidarray = [];
 
 function ToggleMotorColors() {
@@ -42,16 +43,16 @@ function EnableDisableKnobs(action) {
   }
 }
 
-function SendtoAPI() {  
-  var js_obj = {
-    "power": _power,
-    "pos_motor1": _posmotor1,
-    "pos_motor2": _posmotor2,
-    "functionalitycheck": "0"
-  };
-
+function SendtoAPI() { 
+  var js_obj = new Object(); 
+ 
+      js_obj["pos_motor1"] = _posmotor1;
+      js_obj["pos_motor2"] = _posmotor2;
+      js_obj["power"] =  _power;
+      js_obj["runid_change"] = _runidchange;
   
   var data = JSON.stringify(js_obj);
+  console.log(data);
 
   $.ajax({
     type: "POST",
@@ -59,8 +60,8 @@ function SendtoAPI() {
     data: data,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
-    success: function(data){
-      console.log(data);
+    success: function(result){
+      UpdateGUI(result);
     },
     error: function(errMsg) {
         alert(errMsg);
@@ -69,15 +70,59 @@ function SendtoAPI() {
 
 }
 
-function AddLogEntry(entry) {
-    $('#logbox').append('<log>'+entry+'</br></log>');
+function AddLogEntry(entry, type) {
+    $('#logbox').append('<log class="'+type+'">'+entry+'</br></log>');
 }
 
 
+function UpdateGUI(data) { 
+    
+   // var data = JSON.parse(result);
+    console.log(data);
+    updateMotor1(data.pos_motor1,false);
+    updateMotor2(data.pos_motor2,false);
+    $('#motor1inputbox').val(Math.round(data.pos_motor1));
+    $('#motor2inputbox').val(Math.round(data.pos_motor2));
+    
+    if (data.power == 0) {
+      alert("System is OFF");
+      PowerOff(false);
+      return;
+    } else {
+      PowerOn(false);
+    }
+    
+
+    for (var key in data.logentries) {
+      var logentry = data.logentries[key];
+      AddLogEntry(logentry.timestamp + "  |  " +logentry.runid+ "  |  "+ logentry.verb + "  |  " + logentry.action + "  |  " + logentry.data,logentry.verb);
+    }
+    
+    for (var key in data) {
+      
+      if (key.substring(0,6) == "status") {
+        if (data[key] == 1) {
+           $('#'+key).text("OK").addClass('status-on').removeClass('status-off').removeClass('status-error');
+
+        } else {
+          $('#'+key).text("ERR").addClass('status-error').removeClass('status-off').removeClass('status-on');
+        }
+        
+      } else if (key.substring(0,7) == "voltage") {
+        if (data[key] > 0) {
+          $('#'+key).text(data[key]).addClass('status-on').removeClass('status-off').removeClass('status-error');
+        } else {
+          $('#'+key).text("0.00").addClass('status-error').removeClass('status-off').removeClass('status-on');
+        }
+      } 
+    }
+  }
+
 function GetTestData(url) {  
   $.ajax({url: url, success: function(result) {
-
-    var data = result;
+    
+    console.log(result);
+    var data = JSON.parse(result);
     updateMotor1(data.pos_motor1);
     updateMotor2(data.pos_motor2);
     $('#motor1inputbox').val(Math.round(data.pos_motor1));
@@ -94,7 +139,7 @@ function GetTestData(url) {
 
     for (var key in data.logentries) {
       var logentry = data.logentries[key];
-      AddLogEntry(logentry.timestamp + "  |  " + "  |  "+ logentry.verb + "  |  " + logentry.action + "  |  " + logentry.data);
+      AddLogEntry(logentry.timestamp + "  |  " +logentry.runid+ "  |  "+ logentry.verb + "  |  " + logentry.action + "  |  " + logentry.data,logentry.verb);
     }
     
     for (var key in data) {
@@ -120,37 +165,45 @@ function GetTestData(url) {
 }
 
 
-function updateMotor1(pos) {
+function updateMotor1(pos,send = true) {
   $('#motor1').val(pos).trigger('change');
   _posmotor1 = pos;
-  SendtoAPI();
+  if(send) {
+   SendtoAPI();
+  }
 }
 
-function updateMotor2(pos) {
+function updateMotor2(pos,send = true) {
   $('#motor2').val(pos).trigger('change');
   _posmotor2 = pos;
-  SendtoAPI();
+  if(send) {
+   SendtoAPI();
+  }
 }
 
 
-function PowerOn () {
+function PowerOn (send = true) {
   var motor1 = $('#motor1');
   var motor2 = $('#motor2');
   EnableDisableKnobs(1);
   _power = 1.
-  SendtoAPI();
+  if(send) {
+    SendtoAPI();
+  }
   $('#motor1').val(motor1.val()).trigger('change');
   $('#motor2').val(motor2.val()).trigger('change');
   $('#powerswitch').children('input').prop('checked',true)
   $('#power').text("ON").addClass('status-on').removeClass('status-error').removeClass('status-off');
 }
 
-function PowerOff () {
+function PowerOff (send = true) {
   var motor1 = $('#motor1');
   var motor2 = $('#motor2');
   EnableDisableKnobs(0);
   _power = 0;
-  SendtoAPI();
+  if(send) {
+   SendtoAPI();
+  }
   $('#motor1').val(motor1.val()).trigger('change');
   $('#motor2').val(motor2.val()).trigger('change');
   $('#powerswitch').children('input').prop('checked',false)
@@ -332,18 +385,36 @@ $('#motor2rightarrow').click( function() {
 
    $('#jsontest').click(function () {
      GetTestData('json/example.json');
+     //SendtoAPI();
    });
    
    $("#filterall").click(function() {
     $(".filtertest").prop("checked", $(this).prop("checked"));
+    if ($(this).prop("checked")) {
+      $("log").show();
+    } else {
+      $("log").hide();
+    }
   });
 
   $(".filtertest").click(function() {
+    var filter = $(this).val();
+    console.log(filter);
     if (!$(this).prop("checked")) {
         $("#filterall").prop("checked", false);
+        $("."+filter).hide();
+    } else {
+        $("."+filter).show();
     }
+  });
 
-    
+  var rid = generateEpoch();
+  $('#runidtext').html(rid);
+
+  $("#generaterunid").click(function(){
+    var rid = generateEpoch();
+    $('#runidtext').html(rid);
+    runidarray.push(rid);
   });
 
  });
@@ -351,20 +422,17 @@ $('#motor2rightarrow').click( function() {
 //used this code, but found out I needed to have it in a document ready function?
 //https://dev.to/jackharner/select-all-checkboxes-with-jquery-31al
 
+function generateEpoch () {
+  var now = Date.now() / 1000;
+  return now;
+}
 
 function populaterunidlist() {
 
 };
 
 // saves runid to array for it to list in select
-$(document).ready(function(){
-  $("#generaterunid").click(function(){
-      var rid = makeid(5);
-      $('#runidtext').html(rid);
-      runidarray.push(rid);
-  });
-});
-
+  
 // Give random letters/numbers to supply run ID
 // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function makeid(length) {
