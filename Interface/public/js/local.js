@@ -6,6 +6,7 @@ var _power = 0;
 var _posmotor1 = 0;
 var _posmotor2 = 0;
 var _runidchange = 0;
+var _currentrunid = 0;
 var runidarray = [];
 
 function ToggleMotorColors() {
@@ -62,6 +63,7 @@ function SendtoAPI() {
     dataType: "json",
     success: function(result){
       UpdateGUI(result);
+      _runidchange = 0;
     },
     error: function(errMsg) {
         alert(errMsg);
@@ -81,11 +83,12 @@ function UpdateGUI(data) {
     console.log(data);
     updateMotor1(data.pos_motor1,false);
     updateMotor2(data.pos_motor2,false);
+    _currentrunid = data.runid;
+    $('#runidtext').html(_currentrunid);
     $('#motor1inputbox').val(Math.round(data.pos_motor1));
     $('#motor2inputbox').val(Math.round(data.pos_motor2));
     
     if (data.power == 0) {
-      alert("System is OFF");
       PowerOff(false);
       return;
     } else {
@@ -213,7 +216,6 @@ function PowerOff (send = true) {
 }
    
 $(function($) {
-
   var motor1 = $('#motor1');
      var motor2 = $('#motor2');
      ToggleMotorColors();
@@ -221,11 +223,13 @@ $(function($) {
      motor1.knob({
       change : function (value) {
           console.log("change1 : " + value);
-          $('#motor1inputbox').val(Math.round(value))
+          $('#motor1inputbox').val(Math.round(value));
+          _posmotor1 = Math.round(value);
+          SendtoAPI();
       },
       release : function (value) {
           //console.log(this.$.attr('value'));
-          console.log("release1 : " + value);
+          console.log("release1 : " + value)
       },
       cancel : function () {
           console.log("cancel1 : ", this);
@@ -243,6 +247,8 @@ $(function($) {
       change : function (value) {
           console.log("change1 : " + value);
           $('#motor2inputbox').val(Math.round(value))
+          _posmotor2 = Math.round(value);
+          SendtoAPI();
       },
       release : function (value) {
           //console.log(this.$.attr('value'));
@@ -408,13 +414,15 @@ $('#motor2rightarrow').click( function() {
     }
   });
 
-  var rid = generateEpoch();
-  $('#runidtext').html(rid);
+ // var rid = generateEpoch();
+ // $('#runidtext').html(rid);
 
   $("#generaterunid").click(function(){
-    var rid = generateEpoch();
-    $('#runidtext').html(rid);
-    runidarray.push(rid);
+    //var rid = generateEpoch();
+    _runidchange = 1;
+    $('#runidtext').html(_currentrunid);
+    runidarray.push(_currentrunid);
+    SendtoAPI();
   });
 
  });
