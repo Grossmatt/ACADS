@@ -10,7 +10,7 @@ const control = require('./control.js');
 
 console.log(control.i2cobject());
 
-var power_state = 0;
+var power_state = -1;
 var pos_motor1_state = 0;
 var pos_motor2_state = 0;
 
@@ -44,6 +44,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
     var power = req.body.power;
     var pos_motor1 = req.body.pos_motor1;
     var pos_motor2 = req.body.pos_motor2;
+    var runid_change = req.body.runid_change;
     var obj = new Object();
 
     if (power != power_state) {
@@ -53,6 +54,13 @@ api_app.post('/api/ACADS', function(req, res, next) {
         logging.LogEntry('Power','System Power On', 1);
       }
     }
+
+
+    if (runid_change) {
+      logging.generateEpoch();
+    }
+
+
 
     if (pos_motor1 != pos_motor1_state) {
       logging.LogEntry('Motor1','Motor 1 Position Change', pos_motor1)
@@ -85,6 +93,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
       obj["voltage_input_5s"] =  6.53;
       obj["voltage__input_10s"] =  6.44;
       obj["voltage_Input_30s"] =  6.45;
+      obj["runid"] = logging.epoch;
       obj["logentries"] = {};
       for (x in logging.logentries) {
         var item = logging.logentries[x];
