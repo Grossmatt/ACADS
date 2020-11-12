@@ -8,6 +8,7 @@ var _posmotor2 = 0;
 var _runidchange = 0;
 var _currentrunid = 0;
 var runidarray = [];
+const apiserver =  "localhost";
 
 function ToggleMotorColors() {
   if($('body').hasClass('dark')) {
@@ -57,7 +58,7 @@ function SendtoAPI() {
 
   $.ajax({
     type: "POST",
-    url: "http://localhost:3001/api/ACADS",
+    url: "http://"+apiserver+":3001/api/ACADS",
     data: data,
     contentType: "application/json; charset=utf-8",
     dataType: "json",

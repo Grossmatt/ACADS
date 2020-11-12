@@ -4,11 +4,12 @@ const web_app = express()
 const api_app = express()
 const web_port = 3000
 const api_port = 3001
+const dev_mode = 1;
 const bodyParser = require('body-parser')
 const logging = require('./logging.js');
-const control = require('./control.js');
+const { setGlobalVars, SetJSONParms } = require('./control.js')
 
-console.log(control.i2cobject());
+//console.log(control.i2cobject());
 
 var power_state = -1;
 var pos_motor1_state = 0;
@@ -31,13 +32,14 @@ api_app.use(express.static(path.join(__dirname, 'public')));
 
 
 api_app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
 api_app.get('/api/ACADS', function(req, res, next) {
-  res.send("Not Implmented");
+  res.send("Not Implemented");
 });
 
 api_app.post('/api/ACADS', function(req, res, next) {
@@ -47,29 +49,38 @@ api_app.post('/api/ACADS', function(req, res, next) {
     var runid_change = req.body.runid_change;
     var obj = new Object();
 
+    setGlobalVars(pos_motor1, pos_motor2, power, dev_mode);
+
     if (power != power_state) {
       if (power == 0) {
         logging.LogEntry('Power','System Power Off', 0);
+        console.log("System Power Off");
       } else {
         logging.LogEntry('Power','System Power On', 1);
+        console.log("System Power On");
       }
     }
 
 
     if (runid_change) {
       logging.generateEpoch();
+      console.log('Request RunID Change');
     }
 
 
 
     if (pos_motor1 != pos_motor1_state) {
       logging.LogEntry('Motor1','Motor 1 Position Change', pos_motor1)
+      console.log('Move Motor 1 to Position '+ pos_motor1)
     }
 
     if (pos_motor2 != pos_motor2_state) {
       logging.LogEntry('Motor2','Motor 2 Position Change', pos_motor2)
+      console.log('Move Motor 2 to Position '+ pos_motor2)
     }
-      obj["pos_motor1"] = pos_motor1;
+
+    var obj = SetJSONParms();
+      /*obj["pos_motor1"] = pos_motor1;
       obj["pos_motor2"] = pos_motor2;
       obj["quadrant_hallsensor1"] = 1;
       obj["quadrant_hallsensor2"] = 4;
@@ -92,7 +103,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
       obj["voltage_input"] =  7.88;
       obj["voltage_input_5s"] =  6.53;
       obj["voltage__input_10s"] =  6.44;
-      obj["voltage_Input_30s"] =  6.45;
+      obj["voltage_Input_30s"] =  6.45*/
       obj["runid"] = logging.epoch;
       obj["logentries"] = {};
       for (x in logging.logentries) {
