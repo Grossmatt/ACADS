@@ -38,12 +38,22 @@
 #define PB0 4
 #define BLUE_LED_MASK 4
 
-#define motor1 1
-#define motor2 2
-#define avg_power 3
+#define avg_power 0
+#define motor_1_update 120
+#define motor_2_update 110
+#define motor_1_update_neg 121
+#define motor_2_update_neg 111
 
-uint32_t dataRead = 0;
-uint32_t updateFLAG = 0;
+
+
+int8_t dataRead = 0;
+bool update_stop_flag = false;
+int8_t return_vals[4];
+int8_t motor_position[2];
+uint8_t avg_input_power = 0;
+uint8_t power_generated = 0;
+uint8_t motor_index = 5;
+uint8_t loop_count = 0;
 
 //initialize I2C module 0
 //Slightly modified version of TI's example code
@@ -91,49 +101,96 @@ void I2C0SlaveIntHandler(void)
         break;
 
     case I2C_SLAVE_ACT_RREQ:
+        dataRead = dataRead;
         break;
 
     case I2C_SLAVE_ACT_TREQ:
-        if (dataRead == motor1)
+        if (loop_count == 1) // Loops through and returns to the server the states and values of the system.
         {
-            updateFLAG = 1;
-            I2CSlaveDataPut(I2C0_BASE, 1);
+            I2CSlaveDataPut(I2C0_BASE, return_vals[0]);
         }
-        if (dataRead == motor2)
+        if (loop_count == 2)
         {
-            I2CSlaveDataPut(I2C0_BASE, 2);
+            I2CSlaveDataPut(I2C0_BASE, return_vals[1]);
         }
-        if (dataRead == avg_power)
+        if (loop_count == 3)
         {
-            if (PUSH_BUTTON_0)
-            {
-                I2CSlaveDataPut(I2C0_BASE, 100);
-                updateFLAG = 0;
-            }
-            else
-            {
-                I2CSlaveDataPut(I2C0_BASE, 3);
-                updateFLAG = 0;
-            }
-
+            I2CSlaveDataPut(I2C0_BASE, return_vals[2]);
+        }
+        if (loop_count == 4)
+        {
+            I2CSlaveDataPut(I2C0_BASE, return_vals[3]);
+            loop_count = 0;
+            update_stop_flag = false;
         }
         break;
 
     case I2C_SLAVE_ACT_RREQ_FBR:
         dataRead = I2CSlaveDataGet(I2C0_BASE);
 
-        switch(dataRead)
+        if ((motor_index == 5) & (dataRead < 10)) // This is the default routine. If no user changes occur then the system will send the return_vals array in order.
         {
-            case motor1 :
-                break;
-            case motor2 :
-                break;
-            case avg_power :
-                break;
-            default :
-                break;
+            update_stop_flag = true;
+            loop_count = loop_count + 1;
         }
 
+        if ((dataRead == motor_1_update) & (motor_index == 5)) // This statement determines if motor 1 needs to be written to, if its POSITIVE, and prepares for the next write.
+        {
+            update_stop_flag = true; // Stops updating values of the system
+            motor_index = 0; // Sets the motor which it wants to update. motor 1 being the 0th index.
+            break;
+        }
+
+        if ((dataRead == motor_2_update) & (motor_index == 5)) // Same as above except motor 2 POSITIVE.
+        {
+            update_stop_flag = true;
+            motor_index = 1; // Motor 2 is at index 1 of the array.
+            break;
+        }
+
+        if ((dataRead == motor_1_update_neg) & (motor_index == 5)) // This statement determine if motor 1 needs to be written to, if its NEGATIVE, and prepares for the next write.
+        {
+            update_stop_flag = true;
+            motor_index = 2; // Sets the motor which will be updated. Will be subtracted by 2 later.
+            break;
+        }
+
+        if ((dataRead == motor_2_update_neg) & (motor_index == 5)) // Same as above except for motor 2 NEGATIVE.
+        {
+            update_stop_flag = true;
+            motor_index = 3;
+            break;
+        }
+
+        if ((motor_index == 0) & (dataRead < 41))
+        {
+            motor_position[motor_index] = dataRead; // Writing the new angle to the appropriate registers for motor 1 POSITIVE.
+            motor_index = 5; // Reset motor_index.
+            update_stop_flag = false; // Reset the update flag.
+        }
+
+        if ((motor_index == 2) & (dataRead < 41))
+        {
+            dataRead = dataRead * -1;
+            motor_position[motor_index - 2] = dataRead; // Writing the new angle to the appropriate registers for motor 1 NEGATIVE.
+            motor_index = 5; // Reset motor_index.
+            update_stop_flag = false; // Reset the update flag.
+        }
+
+        if ((motor_index == 1) & (dataRead < 41))
+        {
+            motor_position[motor_index] = dataRead; // Writing the new angle to the appropriate registers for motor 2 POSITIVE.
+            motor_index = 5; // Reset motor_index
+            update_stop_flag = false; // Reset the update flag
+        }
+
+        if ((motor_index == 3) & (dataRead < 41))
+        {
+            dataRead = dataRead * -1;
+            motor_position[motor_index - 2] = dataRead; // Writing the new angle to the appropriate registers for motor 2 NEGATIVE.
+            motor_index = 5; // Reset motor_index
+            update_stop_flag = false; // Reset the update flag
+        }
 
         break;
 
@@ -183,10 +240,13 @@ int main(void)
 
    while (1)
    {
-       BLUE_LED = 0;
-       if (!PUSH_BUTTON_0)
+       if(update_stop_flag == false)
        {
-           BLUE_LED = 1;
+           return_vals[0] = motor_position[0]; // Registers that have motor 1 position
+           return_vals[1] = motor_position[1]; // Registers that have motor 2 position
+           return_vals[2] = avg_input_power; // Register holding avg_input_power
+           return_vals[3] = power_generated; // Register holding breaking circuit power
        }
+
    }
 }
