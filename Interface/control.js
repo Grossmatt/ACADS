@@ -1,38 +1,41 @@
-var dev_mode = 1;
+var dev_mode = 0;
 var Promise = require('bluebird');
-if (!dev_mode) {
 const i2c = require('i2c-bus');
-}
 const TIVA_ADDR = 0x1d;
 
 
-var motor1P = 0;
+var motor1P = 0; // motorxP is the data from the user for each "x" motor
+var temp_motor1 = 0; // temp_motorx is the holding var to test again for each "x" motor.
+var motor_1_copy = 0; // motor_x_copy is a var holding a positive copy of motorxP. Needed for transmition of negative values.
+
 var motor2P = 0;
-var Avg_Power = 44;
-var cycle = 1;
-var iteration = 0;
+var temp_motor2 = 0;
+var motor_2_copy = 0;
+
+var Avg_Power = 0;
 var power_state = 0;
+
+var write_flag = 0; // Flag that stops updates of values during i2c transmitions.
+
+//******************************************************************
+//
+// NOTE: i2c-bus does NOT allow for negative values in the functions
+// 	 used. Thus some manipulation was used below so that a
+//       negative value could be sent across i2c.
+//
+//******************************************************************
+
+
+const passToGlobalAP = power => // Function to pass the avg_power read from i2c into a global var
+{
+	Avg_Power = power;
+	return;
+}
 
 if (!dev_mode) {
 
-const passToGlobalM1 = motor => {
-	motor1P = motor;
-	return;
-};
 
-const passToGlobalM2 = motor => {
-	motor2P = motor;
-	return;
-};
-
-const passToGlobalAP = motor => {
-	Avg_Power = motor;
-	return;
-};
-
-
-
-var promiseWhile = function(condition, action) {
+var promiseWhile = function(condition, action) { // Needed for asynchronous loop
     var resolver = Promise.defer();
 
     var loop = function() {
@@ -48,62 +51,129 @@ var promiseWhile = function(condition, action) {
 };
 
 
-promiseWhile(function() {
-    // Condition for stopping
-   return 1;
+promiseWhile(function() { // Infinite loop that reads and writes values to i2c bus
+
+   return 1; // Condition for stopping
+
 }, function() {
     // The function to run, should return a promise
     return new Promise(function(resolve, reject) {
-        // Arbitrary 250ms async method to simulate async process
+        
         setTimeout(function() {
-	    if (cycle == 1)
+		if (motor1P < 0) // These if/else keep a positive copy of motorxP and updates at the begining of every loop.
 		{
-			i2c.openPromisified(0).
-				then(i2c1 => i2c1.readByte(TIVA_ADDR, cycle).
-				then(motor => passToGlobalM1(motor)).
+			motor_1_copy = motor1P * -1;
+		}
+		else
+		{
+			motor_1_copy = motor1P;
+		}
+
+		if (motor2P < 0)
+		{
+			motor_2_copy = motor2P * -1;
+		}
+		else
+		{
+			motor_2_copy = motor2P;
+		}
+
+	   	if ((motor_1_copy != temp_motor1) & (motor1P > 0)) // I2c write for a positive motor1 change.
+		{
+			write_flag = 1; // Prevents writes to motor1 vals while entering i2c functions.
+
+			temp_motor1 = motor_1_copy;
+			
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 120). // Writes 120 to redboard. Tells it that a positive motor 1 update is next.
 				then(_ => i2c1.close())).
 				catch(console.log);
-				console.log(iteration);
-				console.log("at 1");
-				console.log(motor1P);
-				console.log("");
-		}
-	    else if (cycle == 2)
-		{
-			i2c.openPromisified(0).
-				then(i2c1 => i2c1.readByte(TIVA_ADDR, cycle).
-				then(motor => passToGlobalM2(motor)).
+			console.log("MOTOR 1 CHANGE in progress.");
+
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor1). // Writing the actual value of the motor update.
 				then(_ => i2c1.close())).
 				catch(console.log);
-				console.log(iteration);
-				console.log("at 2");
-				console.log(motor2P);
-				console.log("");
+			console.log("Motor successfully changed.");
+			
+			write_flag = 0; // Release the mutex.
+
 		}
-	    else if (cycle == 3)
+
+	   	if ((motor_2_copy != temp_motor2) && (motor2P > 0)) // Same comments as above except for motor2. 110 is used for motor2 positive opcode.
 		{
-			i2c.openPromisified(0).
-				then(i2c1 => i2c1.readByte(TIVA_ADDR, cycle).
-				then(motor => passToGlobalAP(motor)).
+			write_flag = 1;
+			temp_motor2 = motor_2_copy;
+			
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 110).
 				then(_ => i2c1.close())).
 				catch(console.log);
-				console.log(iteration);
-				console.log("at 3");
-				console.log(Avg_Power);
-				console.log("");
+			console.log("MOTOR 2 CHANGE in progress.");
+
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor2).
+				then(_ => i2c1.close())).
+				catch(console.log);
+			console.log("Motor successfully changed.");
+			
+			write_flag = 0;
+
 		}
-	    if (cycle > 2)
+
+		if ((motor_1_copy != temp_motor1) && (motor1P < 0)) // I2c write for a negative motor 1 change.
 		{
-			cycle = 1;
-	 	}
-	    else
-		{
-			cycle = cycle + 1;
+			write_flag = 1;
+			temp_motor1 = motor_1_copy;
+			
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 121). // 121 used for a negative motor 1 opcode.
+				then(_ => i2c1.close())).
+				catch(console.log);
+			console.log("MOTOR 1 CHANGE in progress (NEGATIVE).");
+
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor1). // Writing the actual value to the redboard.
+				then(_ => i2c1.close())).
+				catch(console.log);
+			console.log("Motor 1 successfully changed.");
+			
+			
+			write_flag = 0;
+
 		}
-		iteration = iteration + 1;
+
+		if ((motor_2_copy != temp_motor2) & (motor2P < 0)) // Same as above function except for motor 2
+		{
+			write_flag = 1;
+			temp_motor2 = motor_2_copy;
+			
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 111). // 111 used for motor 2 negative opcode.
+				then(_ => i2c1.close())).
+				catch(console.log);
+			console.log("MOTOR 2 CHANGE in progress (NEGATIVE).");
+
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor2).
+				then(_ => i2c1.close())).
+				catch(console.log);
+			console.log("Motor 2 successfully changed.");
+			
+			
+			write_flag = 0;
+
+		}
+
+		i2c.openPromisified(1). // This function simply reads the data of the average input power and pass it to the global var for displaying later.
+			then(i2c1 => i2c1.readByte(TIVA_ADDR, 0).
+			then(power => passToGlobalAP(power)).
+			then(_ => i2c1.close())).
+			catch(console.log);
+
             resolve();
 
-        }, 5000);
+        }, 500); // Rate of asynchronous updates in ms
     });
 }).then(function() {
     // Notice we can chain it because it's a Promise, this will run after completion of the promiseWhile Promise!
@@ -145,12 +215,17 @@ function SetJSONParms () {
 
 
 
-function setGlobalVars(_motor1pos, _motor2pos,_power_state,_dev_mode) {
-console.log("SetGlobalVars called:" + _motor1pos + " " + _motor2pos +" "+ _power_state);
-motor1P = _motor1pos;
-motor2P = _motor2pos;
-power_state = _power_state;
-dev_mode = _dev_mode;
+function setGlobalVars(_motor1pos, _motor2pos,_power_state,_dev_mode) { // This function is called in app.js and passes the user updated values to control.js
+
+
+	if (write_flag != 1)
+	{
+		motor1P = _motor1pos;
+		motor2P = _motor2pos;
+		power_state = _power_state;
+		dev_mode = _dev_mode;
+	}
+
 }
 
 
