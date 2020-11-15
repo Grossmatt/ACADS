@@ -6,25 +6,27 @@ var _power = 0;
 var _posmotor1 = 0;
 var _posmotor2 = 0;
 var _runidchange = 0;
+var _functionality_test = 0;
 var _currentrunid = 0;
+var _idleactive = 1;
 var runidarray = [];
 const apiserver =  "localhost";
 
 function ToggleMotorColors() {
   if($('body').hasClass('dark')) {
-    $('#motor1leftarrow').attr('src','img/dark-leftarrow.png');
-    $('#motor1rightarrow').attr('src','img/dark-rightarrow.png');
-    $('#motor2leftarrow').attr('src','img/dark-leftarrow.png');
-    $('#motor2rightarrow').attr('src','img/dark-rightarrow.png');
+    $('#motor1leftarrow').attr('src','img/backward-arrow-dark.png');
+    $('#motor1rightarrow').attr('src','img/forward-arrow-dark.png');
+    $('#motor2leftarrow').attr('src','img/backward-arrow-dark.png');
+    $('#motor2rightarrow').attr('src','img/forward-arrow-dark.png');
     fg_color_enable = '#1bf782';
     fg_color_disable = '#4d2834';
     bg_color_enable = '#4a4646';
     bg_color_disable = '#4a4646';
    } else {
-    $('#motor1leftarrow').attr('src','img/light-leftarrow.png');
-    $('#motor1rightarrow').attr('src','img/light-rightarrow.png');
-    $('#motor2leftarrow').attr('src','img/light-leftarrow.png');
-    $('#motor2rightarrow').attr('src','img/light-rightarrow.png');
+    $('#motor1leftarrow').attr('src','img/backward-arrow-light.png');
+    $('#motor1rightarrow').attr('src','img/forward-arrow-light.png');
+    $('#motor2leftarrow').attr('src','img/backward-arrow-light.png');
+    $('#motor2rightarrow').attr('src','img/forward-arrow-light.png');
     fg_color_enable = ' #0099ff';
     fg_color_disable = '#008080';
     bg_color_enable = '#dad7d7';
@@ -38,10 +40,15 @@ function EnableDisableKnobs(action) {
     
     $('.knob').trigger('configure', {'fgColor':fg_color_disable});
     $('.knob').trigger('configure', {'bgColor':bg_color_disable}); 
+    $('#motor1').trigger('change');
+    $('#motor2').trigger('change');
+
   } else {
     $('.motor').css('pointer-events','auto');
     $('.knob').trigger('configure', {'fgColor':fg_color_enable});
     $('.knob').trigger('configure', {'bgColor':bg_color_enable});
+    $('#motor1').trigger('change');
+    $('#motor2').trigger('change');
   }
 }
 
@@ -52,7 +59,9 @@ function SendtoAPI() {
       js_obj["pos_motor2"] = _posmotor2;
       js_obj["power"] =  _power;
       js_obj["runid_change"] = _runidchange;
-  
+      js_obj["functionality_test"] = _functionality_test;
+      js_obj["idleactive"] = _idleactive;
+
   var data = JSON.stringify(js_obj);
   console.log(data);
 
@@ -65,9 +74,10 @@ function SendtoAPI() {
     success: function(result){
       UpdateGUI(result);
       _runidchange = 0;
+      _functionality_test = 0;
     },
     error: function(errMsg) {
-        alert(errMsg);
+       console.log(errMsg);
     }
 });
 
@@ -81,7 +91,6 @@ function AddLogEntry(entry, type) {
 function UpdateGUI(data) { 
     
    // var data = JSON.parse(result);
-    console.log(data);
     updateMotor1(data.pos_motor1,false);
     updateMotor2(data.pos_motor2,false);
     _currentrunid = data.runid;
@@ -94,6 +103,14 @@ function UpdateGUI(data) {
       return;
     } else {
       PowerOn(false);
+    }
+
+    if (!data.idleactive && data.power == 1) {
+      $('#idleactive').css('color','red');
+      EnableDisableKnobs(0);
+    } else if (data.idleactive && data.power == 1){
+      $('#idleactive').css('color','green');
+      EnableDisableKnobs(1);
     }
     
 
@@ -112,13 +129,19 @@ function UpdateGUI(data) {
           $('#'+key).text("ERR").addClass('status-error').removeClass('status-off').removeClass('status-on');
         }
         
-      } else if (key.substring(0,7) == "voltage") {
+      } else if (key.substring(0,11) == "power_input") {
         if (data[key] > 0) {
           $('#'+key).text(data[key]).addClass('status-on').removeClass('status-off').removeClass('status-error');
         } else {
           $('#'+key).text("0.00").addClass('status-error').removeClass('status-off').removeClass('status-on');
         }
-      } 
+      }  else if (key.substring(0,7) == "braking") {
+        if (data[key] > 0) {
+          $('#'+key).text(data[key]).addClass('status-on').removeClass('status-off').removeClass('status-error');
+        } else {
+          $('#'+key).text("0.00").addClass('status-error').removeClass('status-off').removeClass('status-on');
+        }
+      }
     }
   }
 
@@ -133,13 +156,15 @@ function GetTestData(url) {
     $('#motor2inputbox').val(Math.round(data.pos_motor2));
     
     if (data.power == 0) {
-      alert("System is OFF");
       PowerOff();
       return;
     } else {
       PowerOn();
     }
     
+    window.setInterval(function(){
+      SendtoAPI();
+    }, 1000);
 
     for (var key in data.logentries) {
       var logentry = data.logentries[key];
@@ -156,13 +181,19 @@ function GetTestData(url) {
           $('#'+key).text("ERR").addClass('status-error').removeClass('status-off').removeClass('status-on');
         }
         
-      } else if (key.substring(0,7) == "voltage") {
+      } else if (key.substring(0,11) == "power_input") {
         if (data[key] > 0) {
           $('#'+key).text(data[key]).addClass('status-on').removeClass('status-off').removeClass('status-error');
         } else {
           $('#'+key).text("0.00").addClass('status-error').removeClass('status-off').removeClass('status-on');
         }
-      } 
+      }  else if (key.substring(0,7) == "braking") {
+        if (data[key] > 0) {
+          $('#'+key).text(data[key]).addClass('status-on').removeClass('status-off').removeClass('status-error');
+        } else {
+          $('#'+key).text("0.00").addClass('status-error').removeClass('status-off').removeClass('status-on');
+        }
+      }
     }
   }
   });
@@ -191,13 +222,13 @@ function PowerOn (send = true) {
   var motor2 = $('#motor2');
   EnableDisableKnobs(1);
   _power = 1.
-  if(send) {
-    SendtoAPI();
-  }
   $('#motor1').val(motor1.val()).trigger('change');
   $('#motor2').val(motor2.val()).trigger('change');
   $('#powerswitch').children('input').prop('checked',true)
   $('#power').text("ON").addClass('status-on').removeClass('status-error').removeClass('status-off');
+  if(send) {
+    SendtoAPI();
+  }
 }
 
 function PowerOff (send = true) {
@@ -205,15 +236,15 @@ function PowerOff (send = true) {
   var motor2 = $('#motor2');
   EnableDisableKnobs(0);
   _power = 0;
-  if(send) {
-   SendtoAPI();
-  }
   $('#motor1').val(motor1.val()).trigger('change');
   $('#motor2').val(motor2.val()).trigger('change');
   $('#powerswitch').children('input').prop('checked',false)
   $('#power').text("OFF").addClass('status-off').removeClass('status-error').removeClass('status-on');
   $('.status').text("OFF").addClass('status-off').removeClass('status-error').removeClass('status-on');
-  $('.voltage').text("0.00").addClass('status-off').removeClass('status-error').removeClass('status-on');
+  $('.voltage,.power').text("0.00").addClass('status-off').removeClass('status-error').removeClass('status-on');
+  if(send) {
+    SendtoAPI();
+   }
 }
    
 $(function($) {
@@ -306,6 +337,33 @@ $(function($) {
       }
     }
 });
+
+$('#functionalitycheck').click(function() {
+  _functionality_test = 1;
+  SendtoAPI();
+});
+
+$('#idleactive').css('color','green');
+
+$('#idleactive').click(function () {
+  if ($(this).text() == "Active") {
+      $(this).css('color','red');
+      _idleactive = 0;
+      updateMotor1(0);
+      updateMotor2(0);
+      $(this).text("Idle");
+      if (_power == 1 ) {
+      EnableDisableKnobs(0);
+      }   
+    } else {
+        $(this).text("Active");
+        $(this).css('color','green');
+        _idleactive = 1;
+        if (_power == 1 ) {
+          EnableDisableKnobs(1);
+      }
+    }
+  });
   var timeout = null;
   $('#motor1inputbox').keyup( function() { 
     var obj = this;

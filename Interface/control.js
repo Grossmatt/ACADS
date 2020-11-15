@@ -1,6 +1,8 @@
-var dev_mode = 0;
+var dev_mode = 1;
 var Promise = require('bluebird');
+if (!dev_mode) {
 const i2c = require('i2c-bus');
+}
 const TIVA_ADDR = 0x1d;
 
 
@@ -14,6 +16,7 @@ var motor_2_copy = 0;
 
 var Avg_Power = 0;
 var power_state = 0;
+var idleactive = 1;
 
 var write_flag = 0; // Flag that stops updates of values during i2c transmitions.
 
@@ -204,18 +207,23 @@ function SetJSONParms () {
 	obj["status_braking_circuit2"] =  1;
 	obj["status_microcontroller1"] =  1;
 	obj["status_microcontroller2"] =  1;
-	obj["voltage_input"] =  7.88;
-	obj["voltage_input_5s"] =  6.53;
-	obj["voltage__input_10s"] =  6.44;
-	obj["voltage_Input_30s"] =  6.45;
-	
+	obj["idleactive"] = idleactive; //0 - Idle, 1 = Active
+	obj["power_input"] =  7.88;
+	obj["power_input_5s"] =  6.53;
+	obj["power_input_10s"] =  6.44;
+	obj["power_input_30s"] =  6.45;
+	obj["braking_voltage"] =  7.88;
+	obj["braking_voltage_5s"] =  6.53;
+	obj["braking_voltage_10s"] =  6.44;
+	obj["braking_voltage_30s"] =  6.45;
+	obj["functionality_test_result"] = 1;
 	return obj;
 }
 
 
 
 
-function setGlobalVars(_motor1pos, _motor2pos,_power_state,_dev_mode) { // This function is called in app.js and passes the user updated values to control.js
+function setGlobalVars(_motor1pos, _motor2pos, _power_state, _functionality_test, _idleactive, _dev_mode) { // This function is called in app.js and passes the user updated values to control.js
 
 
 	if (write_flag != 1)
@@ -224,6 +232,7 @@ function setGlobalVars(_motor1pos, _motor2pos,_power_state,_dev_mode) { // This 
 		motor2P = _motor2pos;
 		power_state = _power_state;
 		dev_mode = _dev_mode;
+		idleactive = _idleactive;
 	}
 
 }

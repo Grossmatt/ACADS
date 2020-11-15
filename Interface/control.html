@@ -42,9 +42,9 @@
             data-max="40"
             value="0" />
             <div class="motorInput">
-                <img id="motor1leftarrow" class="arrow" src="img/dark-leftarrow.png" />
+                <img id="motor1leftarrow" class="arrow" src="img/backward-arrow-dark.png" />
                 <input id="motor1inputbox" class="motorInputBox" type="text" maxlength="3" value="0" />
-                <img id="motor1rightarrow" class="arrow" src="img/dark-rightarrow.png" />
+                <img id="motor1rightarrow" class="arrow" src="img/forward-arrow-dark.png" />
             </div>
         </div>
     </div> 
@@ -64,9 +64,9 @@
             data-max="40"
             value="0"  />
             <div class="motorInput">
-                <img id="motor2leftarrow" class="arrow" src="img/dark-leftarrow.png" />
+                <img id="motor2leftarrow" class="arrow" src="img/backward-arrow-dark.png" />
                 <input id="motor2inputbox" class="motorInputBox" type="text" maxlength="3" value="0" />
-                <img id="motor2rightarrow" class="arrow" src="img/dark-rightarrow.png" />
+                <img id="motor2rightarrow" class="arrow" src="img/forward-arrow-dark.png" />
             </div>
             </div>
     </div>  
@@ -83,10 +83,26 @@
     <div class="middlecolumn">
         <div class="s_informationbox light">
             <div class="statusbox light">
-            <label class="statuslabel">Input Voltage:  </label><label id="voltage_input" class="voltage status-off">0.00</label><br />
-            <label class="statuslabel">Input Voltage 5s:  </label><label id="voltage_input_5s" class="voltage status-off">0.00</label><br />
-            <label class="statuslabel">Input Voltage 10s:  </label><label id="voltage__input_10s" class="voltage status-off">0.00</label><br />
-            <label class="statuslabel">Input Voltage 30s:  </label><label id="voltage_Input_30s" class="voltage status-off">0.00</label><br />
+            <label class="statuslabel">Power Input 5s:  </label><label id="power_input_5s" class="power status-off">0.00</label><br />
+            <label class="statuslabel">Power Input 10s:  </label><label id="power_input_10s" class="power status-off">0.00</label><br />
+            <label class="statuslabel">Power Input 30s:  </label><label id="power_input_30s" class="power status-off">0.00</label><br />
+        </div>
+    </div>
+</div>
+<div class="middlecolumn">
+    <div class="s_informationbox light">
+        <div class="statusbox light">
+            <label class="statuslabel">Power Input:  </label><label id="power_input" class="power status-off">0.00</label><br />
+            <label class="statuslabel">Braking Voltage:  </label><label id="braking_voltage" class="voltage status-off">0.00</label><br />
+</div>
+</div>
+</div>
+<div class="middlecolumn">
+<div class="s_informationbox light">
+    <div class="statusbox light">
+            <label class="statuslabel">Braking Voltage 5s:  </label><label id="braking_voltage_5s" class="voltage status-off">0.00</label><br />
+            <label class="statuslabel">Braking Voltage 10s:  </label><label id="braking_voltage_10s" class="voltage status-off">0.00</label><br />
+            <label class="statuslabel">Braking Voltage 30s:  </label><label id="braking_voltage_30s" class="voltage status-off">0.00</label><br />
             </div>
         </div>
     </div>
@@ -94,9 +110,10 @@
 <div class="row">
     <div class="bottomcolumn light">
         <div class="informationbox light">
+                <button class="control-button" id="idleactive">Active</button>
                 <button class="control-button" id="functionalitycheck">Functionality Check</button>
                 <button class="control-button" id="reset">Reset</button>
-                <button class="control-button" id="jsontest">JSON Test</button>
+                <button class="control-button" id="jsonmanual">JSON Manual Upload</button>
         </div>
     </div> 
     <div class="bottomcolumn light">

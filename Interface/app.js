@@ -14,6 +14,7 @@ const { setGlobalVars, SetJSONParms } = require('./control.js')
 var power_state = -1;
 var pos_motor1_state = 0;
 var pos_motor2_state = 0;
+var idleactivestate = 1;
 
 web_app.use(express.static(path.join(__dirname, 'public')));
 
@@ -47,9 +48,11 @@ api_app.post('/api/ACADS', function(req, res, next) {
     var pos_motor1 = req.body.pos_motor1;
     var pos_motor2 = req.body.pos_motor2;
     var runid_change = req.body.runid_change;
+    var functionality_check = req.body.functionality_test;
+    var idleactive = req.body.idleactive;
     var obj = new Object();
 
-    setGlobalVars(pos_motor1, pos_motor2, power, dev_mode);
+    setGlobalVars(pos_motor1, pos_motor2, power, functionality_check, idleactive, dev_mode);
 
     if (power != power_state) {
       if (power == 0) {
@@ -59,6 +62,20 @@ api_app.post('/api/ACADS', function(req, res, next) {
         logging.LogEntry('Power','System Power On', 1);
         console.log("System Power On");
       }
+    }
+
+    if(functionality_check) {
+      console.log("Functionality Test");
+    }
+
+    if(idleactive != idleactivestate && idleactive == 1) {
+      logging.LogEntry('Power','System Set to Active', 0);
+      console.log("System Set to Active");
+    }
+    
+    if(idleactive != idleactivestate && idleactive == 0) {
+      logging.LogEntry('Power','System Set to Idle', 0);
+      console.log("System Set to Idle");
     }
 
 
@@ -119,6 +136,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
    power_state = power;
    pos_motor1_state = pos_motor1;
    pos_motor2_state = pos_motor2;
+   idleactivestate = idleactive;
    logging.LogClear();
     next();
 });
