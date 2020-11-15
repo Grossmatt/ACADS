@@ -11,6 +11,7 @@ var _currentrunid = 0;
 var _idleactive = 1;
 var runidarray = [];
 const apiserver =  "localhost";
+const apirefresh = 1000;
 
 function ToggleMotorColors() {
   if($('body').hasClass('dark')) {
@@ -63,7 +64,7 @@ function SendtoAPI() {
       js_obj["idleactive"] = _idleactive;
 
   var data = JSON.stringify(js_obj);
-  console.log(data);
+  //console.log(data);
 
   $.ajax({
     type: "POST",
@@ -148,7 +149,7 @@ function UpdateGUI(data) {
 function GetTestData(url) {  
   $.ajax({url: url, success: function(result) {
     
-    console.log(result);
+    //console.log(result);
     var data = JSON.parse(result);
     updateMotor1(data.pos_motor1);
     updateMotor2(data.pos_motor2);
@@ -162,9 +163,7 @@ function GetTestData(url) {
       PowerOn();
     }
     
-    window.setInterval(function(){
-      SendtoAPI();
-    }, 1000);
+    
 
     for (var key in data.logentries) {
       var logentry = data.logentries[key];
@@ -250,6 +249,11 @@ function PowerOff (send = true) {
 $(function($) {
   var motor1 = $('#motor1');
      var motor2 = $('#motor2');
+     
+     window.setInterval(function(){
+      SendtoAPI();
+    }, apirefresh);
+     
      ToggleMotorColors();
      
      motor1.knob({
@@ -259,6 +263,9 @@ $(function($) {
           _posmotor1 = Math.round(value);
           SendtoAPI();
       },
+
+
+
       release : function (value) {
           //console.log(this.$.attr('value'));
           console.log("release1 : " + value)
@@ -464,7 +471,7 @@ $('#motor2rightarrow').click( function() {
 
   $(".filtertest").click(function() {
     var filter = $(this).val();
-    console.log(filter);
+    //console.log(filter);
     if (!$(this).prop("checked")) {
         $("#filterall").prop("checked", false);
         $("."+filter).hide();

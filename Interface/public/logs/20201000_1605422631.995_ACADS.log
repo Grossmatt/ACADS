@@ -1,0 +1,11 @@
+2020-10-15 00:44:35|1605422631.995|Power|System Power Off|0
+2020-10-15 00:46:22|1605422631.995|Power|System Power On|1
+2020-10-15 00:46:24|1605422631.995|Motor2|Motor 2 Position Change|25
+2020-10-15 00:46:25|1605422631.995|Motor2|Motor 2 Position Change|-22
+2020-10-15 00:46:26|1605422631.995|Motor2|Motor 2 Position Change|-12
+2020-10-15 00:46:27|1605422631.995|Motor2|Motor 2 Position Change|2
+2020-10-15 00:46:30|1605422631.995|Power|System Set to Idle|0
+2020-10-15 00:46:30|1605422631.995|Motor2|Motor 2 Position Change|0
+2020-10-15 00:46:35|1605422631.995|Power|System Set to Active|0
+2020-10-15 00:46:37|1605422631.995|Motor2|Motor 2 Position Change|22
+2020-10-15 00:46:38|1605422631.995|Motor2|Motor 2 Position Change|-26
