@@ -94,6 +94,7 @@ function UpdateGUI(data) {
    // var data = JSON.parse(result);
     updateMotor1(data.pos_motor1,false);
     updateMotor2(data.pos_motor2,false);
+    
     _currentrunid = data.runid;
     $('#runidtext').html(_currentrunid);
     $('#motor1inputbox').val(Math.round(data.pos_motor1));

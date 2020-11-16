@@ -14,7 +14,7 @@ function LogClear() {
 }
   
 
-function LogEntry(verb, action, data) {
+function LogEntry(epoch, verb, action, data) {
     var date_ob = new Date();
 // current date
 // adjust 0 before single digit date   

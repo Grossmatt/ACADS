@@ -56,11 +56,12 @@ api_app.post('/api/ACADS', function(req, res, next) {
 
     if (power != power_state) {
       if (power == 0) {
-        logging.LogEntry('Power','System Power Off', 0);
+        logging.LogEntry(logging.epoch,'Power','System Power Off', 0);
         console.log("System Power Off");
       } else {
-        logging.LogEntry('Power','System Power On', 1);
+        logging.LogEntry(logging.epoch,'Power','System Power On', 1);
         console.log("System Power On");
+        console.log("Current RunID: "+logging.epoch);
       }
     }
 
@@ -69,30 +70,32 @@ api_app.post('/api/ACADS', function(req, res, next) {
     }
 
     if(idleactive != idleactivestate && idleactive == 1) {
-      logging.LogEntry('Power','System Set to Active', 0);
+      logging.LogEntry(logging.epoch,'Power','System Set to Active', 0);
       console.log("System Set to Active");
     }
     
     if(idleactive != idleactivestate && idleactive == 0) {
-      logging.LogEntry('Power','System Set to Idle', 0);
+      logging.LogEntry(logging.epoch,'Power','System Set to Idle', 0);
       console.log("System Set to Idle");
     }
 
 
     if (runid_change) {
-      logging.generateEpoch();
+      logging.epoch = logging.generateEpoch();
       console.log('Request RunID Change');
+      console.log('New RunID:'+logging.epoch);
+
     }
 
 
 
     if (pos_motor1 != pos_motor1_state) {
-      logging.LogEntry('Motor1','Motor 1 Position Change', pos_motor1)
+      logging.LogEntry(logging.epoch,'Motor1','Motor 1 Position Change', pos_motor1)
       console.log('Move Motor 1 to Position '+ pos_motor1)
     }
 
     if (pos_motor2 != pos_motor2_state) {
-      logging.LogEntry('Motor2','Motor 2 Position Change', pos_motor2)
+      logging.LogEntry(logging.epoch,'Motor2','Motor 2 Position Change', pos_motor2)
       console.log('Move Motor 2 to Position '+ pos_motor2)
     }
 
