@@ -1,8 +1,8 @@
 var dev_mode = 0;
 var Promise = require('bluebird');
-if (!dev_mode) {
+
 const i2c = require('i2c-bus');
-}
+
 const TIVA_ADDR = 0x1d;
 
 
@@ -16,6 +16,11 @@ var motor_2_copy = 0;
 
 var Avg_Power = 0;
 var power_state = 0;
+var temp_power_state = 0;
+
+var func_Test_Result = 0;
+var req_func_test = 0;
+
 var idleactive = 1;
 
 var write_flag = 0; // Flag that stops updates of values during i2c transmitions.
@@ -35,7 +40,13 @@ const passToGlobalAP = power => // Function to pass the avg_power read from i2c 
 	return;
 }
 
-if (!dev_mode) {
+const passToGlobalFuncTest = functest => // Function to pass the Func_Test_Result read from i2c into a global var
+{
+	func_Test_Result = functest;
+	return;
+}
+
+
 
 
 var promiseWhile = function(condition, action) { // Needed for asynchronous loop
@@ -63,6 +74,49 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
     return new Promise(function(resolve, reject) {
         
         setTimeout(function() {
+		if ((temp_power_state != power_state) & (power_state == 1))
+		{
+			temp_power_state = power_state;
+
+			write_flag = 1;
+
+			i2c.openPromisified(1). // Writing to RedBoard a value of 130 to perform functionality test on power on.
+				then(i2c1 => i2c1.readByte(TIVA_ADDR, 130).
+				then(functest => passToGlobalFuncTest(functest)).
+				then(_ => i2c1.close())).
+				catch(console.log);
+
+			write_flag = 0;
+
+		}
+
+		if (idleactive == 0)
+		{
+			write_flag = 1;
+			is_idle = 1;
+
+			i2c.openPromisified(1).
+				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 140). // 140 used to set motors idle.
+				then(_ => i2c1.close())).
+				catch(console.log);
+
+			write_flag = 0;
+				
+		}
+		if (req_func_test == 1)
+		{
+			write_flag = 1;
+
+			i2c.openPromisified(1). // Writing to RedBoard a value of 130 to perform functionality test.
+				then(i2c1 => i2c1.readByte(TIVA_ADDR, 130).
+				then(functest => passToGlobalFuncTest(functest)).
+				then(_ => i2c1.close())).
+				catch(console.log);
+			
+			write_flag = 0;
+
+		}
+
 		if (motor1P < 0) // These if/else keep a positive copy of motorxP and updates at the begining of every loop.
 		{
 			motor_1_copy = motor1P * -1;
@@ -176,13 +230,13 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 
             resolve();
 
-        }, 500); // Rate of asynchronous updates in ms
+        }, 1000); // Rate of asynchronous updates in ms
     });
 }).then(function() {
     // Notice we can chain it because it's a Promise, this will run after completion of the promiseWhile Promise!
 });
 
-}
+
 
 
 function SetJSONParms () {
@@ -233,6 +287,7 @@ function setGlobalVars(_motor1pos, _motor2pos, _power_state, _functionality_test
 		power_state = _power_state;
 		dev_mode = _dev_mode;
 		idleactive = _idleactive;
+		req_func_test = _functionality_test;
 	}
 
 }
