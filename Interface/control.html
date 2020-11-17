@@ -154,16 +154,11 @@
                 </label>
                 <text class="runidtext" name="runidtext" id="runidtext"></text>
                 <br>
-                <button name="generaterunid" id="generaterunid" type=button>
+                <button name="generaterunid" id="generaterunid" class="submitbutton" type=button>
                     Generate New Run ID
                 </button>
             </div>
-            <div class="runidbox">
-                <label for="runid" class="runidtext light">Select Run ID</label><br>
-                <select id="runid" name="runid" width="30px">
-                    <option value="1">1</option>
-                </select>
-            </div>
+
         </div>
         <div class="row">
             <div class="filtercolumn">
@@ -194,22 +189,43 @@
                 </div>
             </div>
         </div>
-        
-        <p>Export</p>
+    <div class="spacer"></div>
+        <div class ="row">
+            <div class="fancylabel">
+                <div class="labelcolumn">
+                <p>Log Search and Export</p>
+            </div>
+            </div>
+
+        </div>
         <div class="row">
-            <div class="datetimebox">
-                <label for="startdate">Start date and time:</label><br>
+            <div class="middlecolumn">
+                    <label for="runid" class="runidtext light">Select Run ID</label>
+                    <select id="runid" name="runid" class="runiddropdown">
+                        <option value="1">1</option>
+                    </select>
+            </div>
+
+            <div class="middlecolumn">
+            <div class="datetimebox light">
+                <label for="startdate">Start date and time:</label>
                 <input class="datetimeselect" type="date" id="startdate">
                 <input class="datetimeselect" type="time" id="starttime">
             </div>
-            <div class="datetimebox">
-                <label for="enddate">End date and time:</label><br>
+            </div>
+            <div class="middlecolumn">
+            <div class="datetimebox light">
+                <label for="enddate">End date and time:</label>
                 <input class="datetimeselect" type="date" id="enddate">
                 <input class="datetimeselect" type="time" id="endtime">
             </div>
+            </div>
+            <div class="middlecolumn">
+                <input type="submit" class="submitbutton">
+            </div>
         </div>
         <div class="row">
-            <input type="submit" class="submitbutton">
+           
         </div>
         <!--
             <div class="logcolumn"></div>

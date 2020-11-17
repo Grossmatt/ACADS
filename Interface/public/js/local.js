@@ -318,7 +318,9 @@ $(function($) {
   });
   $('#modeswitch').click(function() {
     if($(this).children('input').is(':checked')) {
-      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox, .informationbox, .statusbox, .statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox, .filterbox, .runidtext').addClass('dark').removeClass('light');
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox,.labelcolumn, '+
+      '.informationbox, .statusbox, s_statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox,'+
+      ' .filterbox, .runidtext, .submitbutton, .runiddropdown, .datetimeselect').addClass('dark').removeClass('light');
       ToggleMotorColors();
       if($('#powerswitch').children('input').is(':checked')) {
         EnableDisableKnobs(1);
@@ -331,7 +333,9 @@ $(function($) {
       }
     } else {
       ToggleMotorColors();
-      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox, .informationbox, .statusbox, s_statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox, .filterbox, .runidtext').addClass('light').removeClass('dark');
+      $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox,.labelcolumn, '+
+      '.informationbox, .statusbox, s_statusbox, .bottomcolumn, .control-button, .logbox, .datetimebox,'+
+      ' .filterbox, .runidtext, .submitbutton, .runiddropdown, .datetimeselect').addClass('light').removeClass('dark');
       ToggleMotorColors();
       if($('#powerswitch').children('input').is(':checked')) {
         EnableDisableKnobs(1);

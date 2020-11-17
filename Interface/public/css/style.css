@@ -1,6 +1,6 @@
 /* global var so we can change colors here instead of repetitively throughout */
 :root{
-  --dark-text-color: #f72237;
+  --dark-text-color: #518a77;
   --light-text-color: black;
   --dark-bg-color: #1a1a1a;
   --light-bg-color: whitesmoke;
@@ -62,8 +62,23 @@ line-height: 30px;
     background-color: #4d2834;
 }
 
-.top-menu-item.dark.selected {
-    color:#1bf782;
+.submitbutton.light {
+  background-color: #f7f2f2ef;
+  color: black;
+}
+
+.submitbutton.light:hover {
+  background-color: #dad1d125;
+}
+
+
+.submitbutton.dark {
+  background-color: #4a4646;
+  color: white;
+}
+
+.submitbutton.dark:hover {
+  background-color: #4d2834;
 }
 
 .control-button {
@@ -115,6 +130,30 @@ line-height: 30px;
   height: 150px;
 }
 
+.labelcolumn {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex:1;
+  height: 100px;
+  border: 1px; 
+}
+
+.labelcolumn {
+  line-height: normal;
+  text-align: center;
+  margin: 25px auto;
+  font-size: 22px;
+}
+
+.labelcolumn.light > p {
+  color: var(--light-text-color);
+}
+
+.labelcolumn.dark > p {
+  color: var(--dark-text-color);
+}
+
 .bottomcolumn {
     display: flex;
     flex-direction: column;
@@ -122,8 +161,15 @@ line-height: 30px;
     flex: 6;
     height: 250px;
 }
+.spacer {
+  height: 30px;
+  width: 100%;
+}
 
-
+.fancylabel {
+  width: 80%;
+  margin: 0 auto 25px auto;
+}
 .motor {
     text-align: center; 
 }
@@ -286,7 +332,7 @@ font-size: 20px;
 }
 
 .informationbox.dark > h1 {
-    color: var(--dark-text-color);;
+    color: var(--dark-text-color);
 }
 
 
@@ -471,7 +517,8 @@ log{
 
 /* margin block? so that different devices work?*/
 .datetimebox{
-    margin: auto auto auto auto;
+    /*margin: auto auto auto auto;*/
+    margin: 0 auto;
 }
 .datetimebox.light label{
     display: block;
@@ -486,6 +533,7 @@ log{
 .submitbutton{
   margin: 20px auto auto auto;
   text-align: center;
+  width:200px;
 }
 
 .filterbox{
@@ -501,7 +549,7 @@ log{
 .filterbox.light {
   border: 2px solid #0099ff;
   background-color: var(--light-bg-color);;
-  color: var(--light-text-color);;
+  color: v.submitbuttonar(--light-text-color);;
 }
 
 .filterbox.dark {
@@ -511,8 +559,8 @@ log{
 }
 
 .runidbox {
-  
-  margin: 25px auto 25px auto;
+  margin: 25px 0 25px 0;
+ /* margin: 25px auto 25px auto;*/
 }
 
 .runidtext{
@@ -526,3 +574,46 @@ log{
 .runidtext.dark{
   color: var(--dark-text-color);
 }
+
+.runiddropdown {
+  width: 250px;
+}
+
+.runiddropdown.light {
+  background-color: #f7f2f2ef;
+  color: black;
+}
+
+.runiddropdown.light:hover {
+  background-color: #dad1d125;
+}
+
+
+.runiddropdown.dark {
+  background-color: #4a4646;
+  color: white;
+}
+
+.runiddropdown.dark:hover {
+  background-color: #4d2834;
+}
+
+.datetimeselect.light {
+  background-color: #f7f2f2ef;
+  color: black;
+}
+
+.datetimeselect.light:hover {
+  background-color: #dad1d125;
+}
+
+
+.datetimeselect.dark {
+  background-color: #4a4646;
+  color: white;
+}
+
+.datetimeselect.dark:hover {
+  background-color: #4d2834;
+}
+

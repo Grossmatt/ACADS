@@ -7,7 +7,7 @@ const api_port = 3001
 const dev_mode = 1;
 const bodyParser = require('body-parser')
 const logging = require('./logging.js');
-const { setGlobalVars, SetJSONParms } = require('./control.js')
+const { setGlobalVars, SetJSONParms } = require('./dev-control.js')
 
 //console.log(control.i2cobject());
 
