@@ -1,4 +1,3 @@
-//#include <i2cFeedbackController.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -35,7 +34,7 @@
 #define PUSH_BUTTON_0 (*((volatile uint32_t *)(0x42000000 + (0x400043FC-0x40000000)*32 + 2*4)))
 #define BLUE_LED     (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4)))
 
-#define PB0 4
+#define PB2 4
 #define BLUE_LED_MASK 4
 
 #define avg_power 0
@@ -43,10 +42,12 @@
 #define motor_2_update 110
 #define motor_1_update_neg 121
 #define motor_2_update_neg 111
+#define func_test 130
+#define is_idle 140
 
 
 
-int8_t dataRead = 0;
+uint8_t dataRead = 0;
 bool update_stop_flag = false;
 int8_t return_vals[4];
 int8_t motor_position[2];
@@ -54,6 +55,7 @@ uint8_t avg_input_power = 0;
 uint8_t power_generated = 0;
 uint8_t motor_index = 5;
 uint8_t loop_count = 0;
+uint8_t func_test_result = 1;
 
 //initialize I2C module 0
 //Slightly modified version of TI's example code
@@ -101,7 +103,6 @@ void I2C0SlaveIntHandler(void)
         break;
 
     case I2C_SLAVE_ACT_RREQ:
-        dataRead = dataRead;
         break;
 
     case I2C_SLAVE_ACT_TREQ:
@@ -123,6 +124,12 @@ void I2C0SlaveIntHandler(void)
             loop_count = 0;
             update_stop_flag = false;
         }
+        if (loop_count == 5)
+        {
+            I2CSlaveDataPut(I2C0_BASE, func_test_result);
+            loop_count = 0;
+            update_stop_flag = false;
+        }
         break;
 
     case I2C_SLAVE_ACT_RREQ_FBR:
@@ -132,6 +139,24 @@ void I2C0SlaveIntHandler(void)
         {
             update_stop_flag = true;
             loop_count = loop_count + 1;
+            break;
+        }
+
+        if ((motor_index == 5) & (dataRead == func_test))
+        {
+            // Perform functionality test
+            update_stop_flag = true;
+            loop_count = 5;
+            break;
+        }
+
+        if ((motor_index == 5) & (dataRead == is_idle))
+        {
+            update_stop_flag = true; // Reseting motor positions for idle state
+            motor_position[0] = 0;
+            motor_position[1] = 0;
+            update_stop_flag = false;
+            break;
         }
 
         if ((dataRead == motor_1_update) & (motor_index == 5)) // This statement determines if motor 1 needs to be written to, if its POSITIVE, and prepares for the next write.
@@ -167,14 +192,15 @@ void I2C0SlaveIntHandler(void)
             motor_position[motor_index] = dataRead; // Writing the new angle to the appropriate registers for motor 1 POSITIVE.
             motor_index = 5; // Reset motor_index.
             update_stop_flag = false; // Reset the update flag.
+            break;
         }
 
         if ((motor_index == 2) & (dataRead < 41))
         {
-            dataRead = dataRead * -1;
-            motor_position[motor_index - 2] = dataRead; // Writing the new angle to the appropriate registers for motor 1 NEGATIVE.
+            motor_position[motor_index - 2] = dataRead * -1; // Writing the new angle to the appropriate registers for motor 1 NEGATIVE.
             motor_index = 5; // Reset motor_index.
             update_stop_flag = false; // Reset the update flag.
+            break;
         }
 
         if ((motor_index == 1) & (dataRead < 41))
@@ -182,14 +208,15 @@ void I2C0SlaveIntHandler(void)
             motor_position[motor_index] = dataRead; // Writing the new angle to the appropriate registers for motor 2 POSITIVE.
             motor_index = 5; // Reset motor_index
             update_stop_flag = false; // Reset the update flag
+            break;
         }
 
         if ((motor_index == 3) & (dataRead < 41))
         {
-            dataRead = dataRead * -1;
-            motor_position[motor_index - 2] = dataRead; // Writing the new angle to the appropriate registers for motor 2 NEGATIVE.
+            motor_position[motor_index - 2] = dataRead * -1; // Writing the new angle to the appropriate registers for motor 2 NEGATIVE.
             motor_index = 5; // Reset motor_index
             update_stop_flag = false; // Reset the update flag
+            break;
         }
 
         break;
@@ -220,10 +247,10 @@ int main(void)
     GPIO_PORTF_DR2R_R |= BLUE_LED_MASK;   // set drive strength to 2mA (not needed since default configuration -- for clarity)
     GPIO_PORTF_DEN_R |= BLUE_LED_MASK;   // enable LED
 
-    GPIO_PORTA_DIR_R &= ~(PB0);
-    GPIO_PORTA_DEN_R |= PB0;
+    GPIO_PORTA_DIR_R &= ~(PB2);
+    GPIO_PORTA_DEN_R |= PB2;
 
-    GPIO_PORTA_PUR_R |= PB0;
+    GPIO_PORTA_PUR_R |= PB2;  // For a push button to PB2
 
     InitI2C0();
 
