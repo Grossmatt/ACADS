@@ -97,8 +97,6 @@ function UpdateGUI(data) {
     
     _currentrunid = data.runid;
     $('#runidtext').html(_currentrunid);
-    $('#motor1inputbox').val(Math.round(data.pos_motor1));
-    $('#motor2inputbox').val(Math.round(data.pos_motor2));
     
     if (data.power == 0) {
       PowerOff(false);

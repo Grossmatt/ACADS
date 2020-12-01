@@ -90,3 +90,28 @@
 2020-10-16 22:54:31|1605586313.352|Power|System Power On|1
 2020-10-16 22:54:32|1605586313.352|Power|System Power Off|0
 2020-10-16 23:05:20|1605586313.352|Motor2|Motor 2 Position Change|0
+2020-10-16 23:26:08|1605586313.352|Power|System Power On|1
+2020-10-16 23:26:14|1605586313.352|Motor1|Motor 1 Position Change|-1
+2020-10-16 23:26:14|1605586313.352|Motor1|Motor 1 Position Change|-2
+2020-10-16 23:26:15|1605586313.352|Motor1|Motor 1 Position Change|-3
+2020-10-16 23:26:15|1605586313.352|Motor1|Motor 1 Position Change|-4
+2020-10-16 23:26:15|1605586313.352|Motor1|Motor 1 Position Change|-5
+2020-10-16 23:26:15|1605586313.352|Motor1|Motor 1 Position Change|-6
+2020-10-16 23:26:18|1605586313.352|Motor1|Motor 1 Position Change|-5
+2020-10-16 23:26:18|1605586313.352|Motor1|Motor 1 Position Change|-4
+2020-10-16 23:26:18|1605586313.352|Motor1|Motor 1 Position Change|-3
+2020-10-16 23:26:19|1605586313.352|Motor1|Motor 1 Position Change|-2
+2020-10-16 23:26:19|1605586313.352|Motor1|Motor 1 Position Change|-1
+2020-10-16 23:26:19|1605586313.352|Motor1|Motor 1 Position Change|0
+2020-10-16 23:26:19|1605586313.352|Motor1|Motor 1 Position Change|1
+2020-10-16 23:26:19|1605586313.352|Motor1|Motor 1 Position Change|2
+2020-10-16 23:26:19|1605586313.352|Motor1|Motor 1 Position Change|3
+2020-10-16 23:26:20|1605586313.352|Motor1|Motor 1 Position Change|4
+2020-10-16 23:26:20|1605586313.352|Motor1|Motor 1 Position Change|5
+2020-10-16 23:26:20|1605586313.352|Motor1|Motor 1 Position Change|6
+2020-10-16 23:26:20|1605586313.352|Motor1|Motor 1 Position Change|7
+2020-10-16 23:26:21|1605586313.352|Motor1|Motor 1 Position Change|8
+2020-10-16 23:26:23|1605586313.352|Motor1|Motor 1 Position Change|9
+2020-10-16 23:26:24|1605586313.352|Motor1|Motor 1 Position Change|10
+2020-10-16 23:26:24|1605586313.352|Motor1|Motor 1 Position Change|11
+2020-10-16 23:26:24|1605586313.352|Motor1|Motor 1 Position Change|12

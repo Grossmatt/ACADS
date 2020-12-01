@@ -549,22 +549,18 @@ log{
 .filterbox.light {
   border: 2px solid #0099ff;
   background-color: var(--light-bg-color);;
-  color: v.submitbuttonar(--light-text-color);;
+  color: var(--light-text-color);
 }
 
 .filterbox.dark {
   border: 2px solid #1bf782;
   background-color: #333333;
-  color: var(--dark-text-color);;
+  color: var(--dark-text-color);
 }
 
 .runidbox {
   margin: 25px 0 25px 0;
  /* margin: 25px auto 25px auto;*/
-}
-
-.runidtext{
-
 }
 
 .runidtext.light{

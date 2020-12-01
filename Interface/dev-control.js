@@ -1,4 +1,4 @@
-var dev_mode = 0;
+var dev_mode = 1;
 var Promise = require('bluebird');
 if (!dev_mode) {
 const i2c = require('i2c-bus');
