@@ -1,9 +1,10 @@
 var dev_mode = 0;
 var Promise = require('bluebird');
-
 const i2c = require('i2c-bus');
 
+//this is the i2c address of Tiva
 const TIVA_ADDR = 0x1d;
+const PromiseVal = 1;  //for Phytek this needs to be zero, for raspbi implementation its 1
 
 
 var motor1P = 0; // motorxP is the data from the user for each "x" motor
@@ -80,7 +81,7 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 
 			write_flag = 1;
 
-			i2c.openPromisified(1). // Writing to RedBoard a value of 130 to perform functionality test on power on.
+			i2c.openPromisified(PromiseVal). // Writing to RedBoard a value of 130 to perform functionality test on power on.
 				then(i2c1 => i2c1.readByte(TIVA_ADDR, 130).
 				then(functest => passToGlobalFuncTest(functest)).
 				then(_ => i2c1.close())).
@@ -95,7 +96,7 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 			write_flag = 1;
 			is_idle = 1;
 
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 140). // 140 used to set motors idle.
 				then(_ => i2c1.close())).
 				catch(console.log);
@@ -107,7 +108,7 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 		{
 			write_flag = 1;
 
-			i2c.openPromisified(1). // Writing to RedBoard a value of 130 to perform functionality test.
+			i2c.openPromisified(PromiseVal). // Writing to RedBoard a value of 130 to perform functionality test.
 				then(i2c1 => i2c1.readByte(TIVA_ADDR, 130).
 				then(functest => passToGlobalFuncTest(functest)).
 				then(_ => i2c1.close())).
@@ -141,13 +142,13 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 
 			temp_motor1 = motor_1_copy;
 			
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 120). // Writes 120 to redboard. Tells it that a positive motor 1 update is next.
 				then(_ => i2c1.close())).
 				catch(console.log);
 			console.log("MOTOR 1 CHANGE in progress.");
 
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor1). // Writing the actual value of the motor update.
 				then(_ => i2c1.close())).
 				catch(console.log);
@@ -162,13 +163,13 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 			write_flag = 1;
 			temp_motor2 = motor_2_copy;
 			
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 110).
 				then(_ => i2c1.close())).
 				catch(console.log);
 			console.log("MOTOR 2 CHANGE in progress.");
 
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor2).
 				then(_ => i2c1.close())).
 				catch(console.log);
@@ -183,13 +184,13 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 			write_flag = 1;
 			temp_motor1 = motor_1_copy;
 			
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, 121). // 121 used for a negative motor 1 opcode.
 				then(_ => i2c1.close())).
 				catch(console.log);
 			console.log("MOTOR 1 CHANGE in progress (NEGATIVE).");
 
-			i2c.openPromisified(1).
+			i2c.openPromisified(PromiseVal).
 				then(i2c1 => i2c1.sendByte(TIVA_ADDR, temp_motor1). // Writing the actual value to the redboard.
 				then(_ => i2c1.close())).
 				catch(console.log);
@@ -238,7 +239,8 @@ promiseWhile(function() { // Infinite loop that reads and writes values to i2c b
 
 
 
-
+//this is the function that sets the responses....
+//has default values which should later be changed
 function SetJSONParms () {
 	var obj = {};
 	obj["pos_motor1"] = motor1P;

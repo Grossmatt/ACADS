@@ -13,6 +13,7 @@ var runidarray = [];
 const apiserver =  "localhost";
 const apirefresh = 1000;
 
+//This function is used to Toggle the colors of motors with Dark/light mode switch
 function ToggleMotorColors() {
   if($('body').hasClass('dark')) {
     $('#motor1leftarrow').attr('src','img/backward-arrow-dark.png');
@@ -35,6 +36,9 @@ function ToggleMotorColors() {
    }
 }
 
+
+//This is to disable/enable motor controls for active/idle and poweron/poweroff
+//action = 0 disable, 1 enable
 function EnableDisableKnobs(action) {
   if (action == 0) {
     $('.motor').css('pointer-events','none');
@@ -53,6 +57,9 @@ function EnableDisableKnobs(action) {
   }
 }
 
+
+//this function is use to send new data to API, should happen
+//after every interaction
 function SendtoAPI() { 
   var js_obj = new Object(); 
  
@@ -84,14 +91,16 @@ function SendtoAPI() {
 
 }
 
+
+//this is to add a new entry to log on troubleshooting page
 function AddLogEntry(entry, type) {
     $('#logbox').append('<log class="'+type+'">'+entry+'</br></log>');
 }
 
-
+//this function is called on ajax callbacks to update the interface
+//with new values
 function UpdateGUI(data) { 
     
-   // var data = JSON.parse(result);
     updateMotor1(data.pos_motor1,false);
     updateMotor2(data.pos_motor2,false);
     
@@ -145,10 +154,12 @@ function UpdateGUI(data) {
     }
   }
 
+
+//this function is used only to upload a manual JSON file for testing
+//or possibly if we want to do a "start' configuration
 function GetTestData(url) {  
   $.ajax({url: url, success: function(result) {
     
-    //console.log(result);
     var data = JSON.parse(result);
     updateMotor1(data.pos_motor1);
     updateMotor2(data.pos_motor2);
@@ -197,7 +208,9 @@ function GetTestData(url) {
   });
 }
 
-
+//these  functions updates the motor control
+//you have to trigger change when change values for it to 
+//reflect on the page
 function updateMotor1(pos,send = true) {
   $('#motor1').val(pos).trigger('change');
   _posmotor1 = pos;
@@ -214,7 +227,9 @@ function updateMotor2(pos,send = true) {
   }
 }
 
-
+//these functions are for the power on and off switch
+//the send parameter is if we want to send the values to 
+//API or not
 function PowerOn (send = true) {
   var motor1 = $('#motor1');
   var motor2 = $('#motor2');
@@ -244,17 +259,27 @@ function PowerOff (send = true) {
     SendtoAPI();
    }
 }
-   
+ 
+ 
+//this is all actions that occur on document load
+//contains all dom object bindings
 $(function($) {
   var motor1 = $('#motor1');
      var motor2 = $('#motor2');
      
+     //this is for the autorefesh of the page
      window.setInterval(function(){
       SendtoAPI();
     }, apirefresh);
      
+     //this is the inital toggle for the light mode as a start
+     //mode
      ToggleMotorColors();
      
+     
+     
+     //these motor1 and motor2 knob intialize the motor controls
+     //the change, release, cancel and format are the used parms
      motor1.knob({
       change : function (value) {
           console.log("change1 : " + value);
@@ -302,11 +327,14 @@ $(function($) {
       draw : function () {   
       }
      });
-
+    //this starts knobs in disabled mode
     EnableDisableKnobs(0);
     
+    //we have to trigger a change to update the knobs on front end
     $('#motor1').val(motor1.val()).trigger('change');
     $('#motor2').val(motor2.val()).trigger('change');
+    
+    //this binding is to detect when the power is switched on and off
     $('#powerswitch').click(function() {
       if($(this).children('input').is(':checked')) {
        PowerOn();
@@ -314,6 +342,8 @@ $(function($) {
         PowerOff();
       }
   });
+  
+  //this is to switch from light/dark mode
   $('#modeswitch').click(function() {
     if($(this).children('input').is(':checked')) {
       $('body, .top-menu, .top-menu-item, #motor1, #motor2, .motor, .s_informationbox,.labelcolumn, '+
@@ -348,11 +378,16 @@ $(function($) {
     }
 });
 
+
+//this is the binding for the functionality test button
 $('#functionalitycheck').click(function() {
   _functionality_test = 1;
   SendtoAPI();
 });
 
+
+//idleactive is the button to toggle idle active/idle
+//this function changes the color
 $('#idleactive').css('color','green');
 
 $('#idleactive').click(function () {
@@ -375,6 +410,11 @@ $('#idleactive').click(function () {
     }
   });
   var timeout = null;
+  
+  //motor input boxes are the boxes beneath the motor control
+  //this controls all the boxes actions, including the constraints
+  //as well as updating the motors
+  
   $('#motor1inputbox').keyup( function() { 
     var obj = this;
     if (timeout !== null) {
@@ -412,6 +452,8 @@ $('#idleactive').click(function () {
     }, 1000);
   });
 
+  //these control the arrows on the sides of the input boxes
+  //they move the motors in 1 degree increments
   $('#motor1leftarrow').click( function() {
       var value = parseInt(motor1.val()) - 1;
       if (value < -40)
@@ -443,7 +485,9 @@ $('#motor2rightarrow').click( function() {
 });
 
 
-
+  //the next two bindings are the top menu
+  //they toggle between the troubleshooting page
+  //and the motor control page
   $('#MotorControl').click(function (){
       $('#ScreenMotorControl').show();
       $('#ScreenTroubleShooting').hide();
@@ -458,11 +502,15 @@ $('#motor2rightarrow').click( function() {
     $(this).addClass('selected');
    });
 
+  //this binding is for the Manual JSON button to upload aLinkcolor
+  //manual file
    $('#jsontest').click(function () {
      GetTestData('json/example.json');
      //SendtoAPI();
    });
    
+   
+   //the next bindings control the filtering functions of the troubleshooting page
    $("#filterall").click(function() {
     $(".filtertest").prop("checked", $(this).prop("checked"));
     if ($(this).prop("checked")) {
@@ -474,7 +522,6 @@ $('#motor2rightarrow').click( function() {
 
   $(".filtertest").click(function() {
     var filter = $(this).val();
-    //console.log(filter);
     if (!$(this).prop("checked")) {
         $("#filterall").prop("checked", false);
         $("."+filter).hide();
@@ -483,11 +530,8 @@ $('#motor2rightarrow').click( function() {
     }
   });
 
- // var rid = generateEpoch();
- // $('#runidtext').html(rid);
-
+  //this controls the run id changing functions and the button
   $("#generaterunid").click(function(){
-    //var rid = generateEpoch();
     _runidchange = 1;
     $('#runidtext').html(_currentrunid);
     runidarray.push(_currentrunid);
@@ -496,28 +540,11 @@ $('#motor2rightarrow').click( function() {
 
  });
 
-//used this code, but found out I needed to have it in a document ready function?
-//https://dev.to/jackharner/select-all-checkboxes-with-jquery-31al
-
+//this is to generate a timestamp
+//Epochs are generated for run id in the api/ACADS
+//this is no longer used
 function generateEpoch () {
   var now = Date.now() / 1000;
   return now;
 }
 
-function populaterunidlist() {
-
-};
-
-// saves runid to array for it to list in select
-  
-// Give random letters/numbers to supply run ID
-// https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};

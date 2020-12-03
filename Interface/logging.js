@@ -3,7 +3,7 @@ var logentries = new Object();
 var logcounter = 1;
 var epoch = generateEpoch();
 
-
+//function that generates teh epoch for runid
 function generateEpoch () {
     var now = Date.now() / 1000;
     return now;
@@ -40,7 +40,7 @@ function LogEntry(epoch, verb, action, data) {
     var datestring = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
     logentries[logcounter] =  {"timestamp": datestring, "runid": epoch, "verb" : verb, "action": action, "data" : data};
     logcounter++;
-
+    //naming and appending to log file
     var logstring = datestring + "|" +epoch+ "|"+ verb + "|" + action + "|" + data +"\n";
     var filename = './public/logs/'+year+month+day+'_'+epoch+'_ACADS.log';
     fs.appendFile(filename, logstring , function (err) {
@@ -49,4 +49,6 @@ function LogEntry(epoch, verb, action, data) {
       });
 }
 
+
+//export functions to use in other js files
 module.exports = { LogEntry, generateEpoch, LogClear, logentries:logentries, logcounter:logcounter, epoch: epoch };

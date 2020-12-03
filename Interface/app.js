@@ -7,10 +7,12 @@ const api_port = 3001
 const dev_mode = 1;
 const bodyParser = require('body-parser')
 const logging = require('./logging.js');
+//for developent use dev-control, for non use control.js
+//it excludes i2c code
 const { setGlobalVars, SetJSONParms } = require('./dev-control.js')
 
-//console.log(control.i2cobject());
-
+//intial global variable values
+//these update as teh program runs
 var power_state = -1;
 var pos_motor1_state = 0;
 var pos_motor2_state = 0;
@@ -26,12 +28,12 @@ web_app.listen(web_port, () => {
   console.log(`ACADS web app listening at http://localhost:${web_port}`)
 })
     
-
+//these allow us to post json as well as allows public access to the public folder
 api_app.use(bodyParser.json()); // support json encoded bodies
 api_app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 api_app.use(express.static(path.join(__dirname, 'public')));
 
-
+//need to allow cross origin since web and api are on different ports
 api_app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
 
@@ -39,11 +41,14 @@ api_app.use(function(req, res, next) {
   next();
 });
 
+
+//get function disabled for api, must be sent through post
 api_app.get('/api/ACADS', function(req, res, next) {
   res.send("Not Implemented");
 });
 
 api_app.post('/api/ACADS', function(req, res, next) {
+  //recieved json, now to process request
     var power = req.body.power;
     var pos_motor1 = req.body.pos_motor1;
     var pos_motor2 = req.body.pos_motor2;
@@ -51,9 +56,12 @@ api_app.post('/api/ACADS', function(req, res, next) {
     var functionality_check = req.body.functionality_test;
     var idleactive = req.body.idleactive;
     var obj = new Object();
-
+    
+    //the resets all global variables
     setGlobalVars(pos_motor1, pos_motor2, power, functionality_check, idleactive, dev_mode);
 
+
+    //this is detecting a change in power state, from on to off and logging if necessary
     if (power != power_state) {
       if (power == 0) {
         logging.LogEntry(logging.epoch,'Power','System Power Off', 0);
@@ -64,11 +72,13 @@ api_app.post('/api/ACADS', function(req, res, next) {
         console.log("Current RunID: "+logging.epoch);
       }
     }
-
+    
+    //functionality_check, just logs as far a now, waiting for integration to implement
     if(functionality_check) {
       console.log("Functionality Test");
     }
-
+    
+    //this controls idle/active state buttons
     if(idleactive != idleactivestate && idleactive == 1) {
       logging.LogEntry(logging.epoch,'Power','System Set to Active', 0);
       console.log("System Set to Active");
@@ -79,7 +89,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
       console.log("System Set to Idle");
     }
 
-
+    //this detects run id changes
     if (runid_change) {
       logging.epoch = logging.generateEpoch();
       console.log('Request RunID Change');
@@ -88,7 +98,7 @@ api_app.post('/api/ACADS', function(req, res, next) {
     }
 
 
-
+    //this is detecting if there is a motor position change, if so it's logging the action
     if (pos_motor1 != pos_motor1_state) {
       logging.LogEntry(logging.epoch,'Motor1','Motor 1 Position Change', pos_motor1)
       console.log('Move Motor 1 to Position '+ pos_motor1)
@@ -98,32 +108,9 @@ api_app.post('/api/ACADS', function(req, res, next) {
       logging.LogEntry(logging.epoch,'Motor2','Motor 2 Position Change', pos_motor2)
       console.log('Move Motor 2 to Position '+ pos_motor2)
     }
-
+    
+    //this is setting the JSON parms received to a javascript object
     var obj = SetJSONParms();
-      /*obj["pos_motor1"] = pos_motor1;
-      obj["pos_motor2"] = pos_motor2;
-      obj["quadrant_hallsensor1"] = 1;
-      obj["quadrant_hallsensor2"] = 4;
-      obj["power"] =  power;
-      obj["status_encoder1"] =  1;
-      obj["status_encoder2"] =  1;
-      obj["status_hallsensor1"] =  1;
-      obj["status_hallsensor2"] =  1;
-      obj["status_motor1"] =  1;
-      obj["status_motor2"] =  1;
-      obj["status_powersupply1"] =  1;
-      obj["status_powersupply2"] =  1;
-      obj["status_powersupply3"] =  1;
-      obj["status_megacap1"] =  1;
-      obj["status_megacap2"] =  1;
-      obj["status_braking_circuit1"] =  0;
-      obj["status_braking_circuit2"] =  1;
-      obj["status_microcontroller1"] =  1;
-      obj["status_microcontroller2"] =  1;
-      obj["voltage_input"] =  7.88;
-      obj["voltage_input_5s"] =  6.53;
-      obj["voltage__input_10s"] =  6.44;
-      obj["voltage_Input_30s"] =  6.45*/
       obj["runid"] = logging.epoch;
       obj["logentries"] = {};
       for (x in logging.logentries) {
@@ -132,10 +119,10 @@ api_app.post('/api/ACADS', function(req, res, next) {
       }
 
     var json = JSON.stringify(obj); 
-    
-   // console.log(json);
+   //sending the response back to interface
   res.send(json);  
-
+  
+   //setting new state information
    power_state = power;
    pos_motor1_state = pos_motor1;
    pos_motor2_state = pos_motor2;
